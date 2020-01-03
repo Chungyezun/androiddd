@@ -64,23 +64,21 @@ public class MyApplication extends Application {
         gson = new Gson();
 
         //contacts loading
-        String json = iocustom.readFromFile(context); //파일 열기
+        iocustom.readFromFile(context); //파일 열기
+        /*
         if(json == null){
             Log.e("login activity","Non-existing DATABASE");
         }else{
             Contact[] array = gson.fromJson(json, Contact[].class); //json 에서 얻어가기
             Collections.addAll(contacts,array);
         }
+         */
         //contacts loading done
 
         //Cache loading
         String jsonCache = iocustom.readFromFileCache(context); //파일 열기
-        if(json == null){
-            Log.e("login activity","Non-existing DATABASE");
-        }else{
             Type ssmap = new TypeToken<Map<String,String>>(){}.getType();
             cache = gson.fromJson(jsonCache, ssmap); //json 에서 얻어가기
-        }
         //Cache loading done
 
 
@@ -139,6 +137,17 @@ public class MyApplication extends Application {
         String json;
         json = gson.toJson(contacts);                   //리스트를 json 으로 만들기
         iocustom.writeToFile(json,getAppContext());     // 그거를 그대로 덮어쓰기
+    }
+    public void updateContacts(String jsonString){
+        Contact[] array = gson.fromJson(jsonString, Contact[].class); //json 에서 얻어가기
+        List<Contact> ncontacts = new ArrayList<>();
+        if(ncontacts == null || array == null){
+    //
+        }else{
+            Collections.addAll(ncontacts,array);
+            this.contacts = ncontacts;                       //여기 local variable 도 덮어쓰기
+        }
+
     }
     // context 를 불러와야 할 때 이것을 불러주면 된다!
     public static Context getAppContext(){

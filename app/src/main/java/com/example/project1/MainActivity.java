@@ -3,6 +3,7 @@ package com.example.project1;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.example.project1.Contacts.AddContact;
@@ -24,6 +25,18 @@ import android.view.View;
 import com.example.project1.ui.MainUI.SectionsPagerAdapter;
 import com.google.gson.Gson;
 
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -145,13 +158,8 @@ public class MainActivity extends AppCompatActivity {
         gson = new Gson();
 
         //contacts 의 값들을 load 해줘야 한다.
-        String json = iocustom.readFromFile(this); //파일 열기
-        if(json == null){
-            Log.e("login activity","Non-existing DATABASE");
-        }else{
-            Contact[] array = gson.fromJson(json, Contact[].class); //json 에서 얻어가기
-            Collections.addAll(contacts,array);
-        }
+        iocustom.readFromFile(this); //파일 열기
+
         //로딩 완료
         //로딩 완료가 되었으니, 이 값들을 sharedPreference 로 넘기자...
 
@@ -174,4 +182,5 @@ public class MainActivity extends AppCompatActivity {
         Activity currAct = app.getCurrentActivity();
         if(this.equals(currAct))app.setCurrentActivity(null);
     }
+
 }
