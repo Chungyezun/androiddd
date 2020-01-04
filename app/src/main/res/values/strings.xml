@@ -12,5 +12,7 @@
     <string name="phone_Number">전화번호</string>
     <string name="name">이름</string>
     <string name="title_activity_contact__details">Contact_Details</string>
+    <string name="facebook_app_id">2638767249511751</string>
+    <string name="fb_login_protocol_scheme">fb2638767249511751</string>
 
 </resources>

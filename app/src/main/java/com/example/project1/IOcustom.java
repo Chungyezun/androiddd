@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -196,9 +197,13 @@ public class IOcustom {
                     URL url = new URL(urls[0]);//url을 가져온다.
                     con = (HttpURLConnection) url.openConnection();
                     con.connect();//연결 수행
-
+                    InputStream stream;
                     //입력 스트림 생성
-                    InputStream stream = con.getInputStream();
+                    try {
+                        stream = con.getInputStream();
+                    }catch(FileNotFoundException e){
+                        return null;
+                    }
 
                     //속도를 향상시키고 부하를 줄이기 위한 버퍼를 선언한다.
                     reader = new BufferedReader(new InputStreamReader(stream));
