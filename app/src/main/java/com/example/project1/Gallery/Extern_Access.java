@@ -7,6 +7,10 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.project1.MyApplication;
+
 import java.util.ArrayList;
 
 
@@ -14,15 +18,16 @@ import java.util.ArrayList;
 
 
 public class Extern_Access {
-    public static ArrayList<IMfile> getGalleryImage(Context context){
+    public static void getGalleryImage(Context context){
 
+        MyApplication app = (MyApplication) context.getApplicationContext();
+        app.getNames();
         /*
         * <Flow of downloading task>
             1. Glide 에서 /Gallery 로 Get Request
             2. Get 으로부터 LIST OF FILE NAME 가지고 오기
             3. FILE PATH NAME 으로부터 GLIDE 이용해서 전부 받아오기~~~
          */
-
 
 
         /*
@@ -64,7 +69,7 @@ public class Extern_Access {
         return listOfAllImg;// 모든 이미지의 filepath 를 돌려준다.
 
         */
-        return null;
+        return;
     }
 
 

@@ -35,6 +35,7 @@ public class MyApplication extends Application {
     private List<Contact> contacts = new ArrayList<>();
     private Map<String, String> cache = new HashMap<>();
     private List<ML_Image_Object> img = new ArrayList<>();
+    private List<String> imgNames;
 
     Gson gson;
     IOcustom iocustom;
@@ -50,6 +51,8 @@ public class MyApplication extends Application {
 
     public void onCreate(){
         super.onCreate();
+        iocustom = new IOcustom();
+         imgNames = new ArrayList<>();
 
         // 이미지의 List 로 구현을 하겠습니다.
 
@@ -65,6 +68,9 @@ public class MyApplication extends Application {
 
         //contacts loading
         iocustom.readFromFile(context); //파일 열기
+        iocustom.getImName(context);
+
+
         /*
         if(json == null){
             Log.e("login activity","Non-existing DATABASE");
@@ -87,27 +93,14 @@ public class MyApplication extends Application {
     public List<Contact> getContacts(){
         return contacts;
     }
-    public List<ML_Image_Object> getImg(){
+    public void getImg(){
         load();
-        return img;
-
     }
 
 
     // 이미지들을 외장 database 로부터 가져오기 위해 이것을 한다. Async 로 돌릴 수 있으면 그리 하자...
     private void load(){
-        imdatas = Extern_Access.getGalleryImage(getApplicationContext());
-        //Log.d("IMDATASIZE",imdatas.size() +"");
-        if(imdatas == null){
-            return;
-        }
-        img.clear();
-        for(IMfile m : imdatas){
-            ML_Image_Object mlo = new ML_Image_Object(R.drawable.city,null,false);
-            mlo.setPath(m.path);
-            mlo.setImID(m.document_id);
-            img.add(mlo);
-        }
+        Extern_Access.getGalleryImage(getApplicationContext());
     }
 
     //Refresh 명령을 내리거나, 새로운 사진을 저장했을 때 이것을 부르자.
@@ -152,6 +145,23 @@ public class MyApplication extends Application {
         }
 
     }
+
+    public void updateNames(String jsonString){
+        String[] array = gson.fromJson(jsonString, String[].class); //json 에서 얻어가기
+        List<String> abc = new ArrayList<>();
+        if(array == null){
+            this.imgNames = null;
+        }else{
+            Collections.addAll(abc,array);
+            Log.e("gotArray",abc.toString());
+            this.imgNames = abc;                       //여기 local variable 도 덮어쓰기
+        }
+    }
+    public List<String> getNames(){
+        iocustom.getImName(context);
+        return this.imgNames;
+    }
+
     // context 를 불러와야 할 때 이것을 불러주면 된다!
     public static Context getAppContext(){
         return MyApplication.context;

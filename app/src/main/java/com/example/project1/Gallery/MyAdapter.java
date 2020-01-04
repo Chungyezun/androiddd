@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.icu.text.Transliterator;
 import android.net.Uri;
 import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.project1.MLthings.ML_Fragment;
 import com.example.project1.MLthings.ML_Image_Object;
 import com.example.project1.MyApplication;
@@ -29,19 +31,24 @@ public class MyAdapter extends BaseAdapter
     private MyApplication app;
     private int layout;
     LayoutInflater inf;
+    String url = "http://cs497madcampproj2yeah.localtunnel.me/image";
 
-    public MyAdapter(int layout, Context mContext, List<ML_Image_Object> img)
+
+    public MyAdapter(int layout, Context mContext)
     {
         this.mContext = mContext;
-        this.img = img;
         this.layout = layout;
+        this.app = (MyApplication) mContext.getApplicationContext();
         this.inf = (LayoutInflater) mContext.getSystemService
                 (Context.LAYOUT_INFLATER_SERVICE);
     }
 
+
+
     @Override
     public int getCount() {
-        return img.size();
+
+        return app.getNames().size();
     }
 
     @Override
@@ -67,17 +74,14 @@ public class MyAdapter extends BaseAdapter
         //}
         //imageView.findViewById(R.id.ML_ImageView);
 
-        File imfile = new File(img.get(position).getPath());
-        if (imfile.exists()) {
-            Glide
-                    .with(mContext)
-                    .load(Uri.fromFile(imfile))
-                    .thumbnail(0.01f)
-                    .into(imageView);
+        List<String> imnames = app.getNames();
 
-        } else {
-            imageView.setImageResource(img.get(position).getImResource());
-        }
+        Log.e("SERVER_REQUEST",url + imnames.get(position));
+
+        Glide.with(mContext)
+            .load(url +'/'+ imnames.get(position))
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .into(imageView);
 
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         convertView.getLayoutParams().height = convertView.getLayoutParams().width;

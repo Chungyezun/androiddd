@@ -39,7 +39,7 @@ public class Gallery_Fragment extends Fragment {
     MyApplication app;
     SwipeRefreshLayout swl;
 
-    private List<ML_Image_Object> img;
+    //private List<ML_Image_Object> img;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,18 +52,17 @@ public class Gallery_Fragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        img = app.getImg();
         View view = inflater.inflate(R.layout.fragment_gallery_,container,false);
 
 
         final GridView gridView = (GridView)view.findViewById(R.id.myGrid);
-        gridView.setAdapter(new MyAdapter(R.layout.row,app,img));
+        gridView.setAdapter(new MyAdapter(R.layout.row,app));
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ML_Image_Object item_pos = img.get(position);
-                ShowDialogBox(item_pos);
+               // ML_Image_Object item_pos = img.get(position);
+               // ShowDialogBox(item_pos);
 
             }
         });
@@ -72,8 +71,9 @@ public class Gallery_Fragment extends Fragment {
         swl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                img = app.getImg();
-                MyAdapter nAdapter = new MyAdapter(R.layout.row,app,img);
+                app.getNames();
+
+                MyAdapter nAdapter = new MyAdapter(R.layout.row,app);
                 gridView.setAdapter(nAdapter);
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -122,19 +122,19 @@ public class Gallery_Fragment extends Fragment {
         int index = title.indexOf("/");
         final String name = title.substring(index+1,title.length());
         Image_name.setText(name);
-        File f1 = new File(img.getPath());
-        Glide
-                .with(getAppContext())
-                .load(Uri.fromFile(f1))
-                .into(Image);
+        //File f1 = new File(img.getPath());
+        //Glide
+        //        .with(getAppContext())
+        //        .load(Uri.fromFile(f1))
+        //        .into(Image);
         //Image.setImageBitmap();
         Image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getActivity(), FullView.class);
-                i.putExtra("img_id",img.getPath());
-                i.putExtra("filename",name);
-                startActivity(i);
+                //Intent i = new Intent(getActivity(), FullView.class);
+                //i.putExtra("img_id",img.getPath());
+                //i.putExtra("filename",name);
+                //startActivity(i);
             }
         });
 
@@ -151,10 +151,10 @@ public class Gallery_Fragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                Intent i = new Intent(getActivity(), FullView.class);
-                i.putExtra("img_id",img.getPath());
-                i.putExtra("filename",name);
-                startActivity(i);
+                //Intent i = new Intent(getActivity(), FullView.class);
+                //i.putExtra("img_id",img.getPath());
+                //i.putExtra("filename",name);
+                //startActivity(i);
             }
         });
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));

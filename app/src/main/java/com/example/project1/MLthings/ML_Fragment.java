@@ -83,7 +83,7 @@ public class ML_Fragment extends Fragment {
         final View layout = view.findViewById(R.id.invLayout);
 
 
-        img = app.getImg();
+        img = null;
 
         //여기 이 List 에서, Label 이 되어있지 않은 친구들을 Label 시켜버리자!!!!
         //여기서 그냥 thread 를 만들어 관리할까.....
@@ -126,7 +126,7 @@ public class ML_Fragment extends Fragment {
         swl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                img = app.getImg();
+                img =null;
                 adapter = new MLAdapter(
                         getAppContext(),
                         R.layout.mlrow,

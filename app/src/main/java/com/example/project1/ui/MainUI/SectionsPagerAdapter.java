@@ -40,8 +40,8 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                 Gallery_Fragment gf = new Gallery_Fragment();
                 return gf;
             case 2:
-                ML_Fragment mf = new ML_Fragment();
-                return mf;
+                gf = new Gallery_Fragment();
+                return gf;
             default:
                 return null;
         }

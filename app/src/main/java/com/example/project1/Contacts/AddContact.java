@@ -63,7 +63,6 @@ public class AddContact extends AppCompatActivity {
 
         Contact tmpcontact = new Contact("Jay Lee","01054375220");
 
-
         IOcustom iocustom = new IOcustom();
         Intent intent = new Intent(this, MainActivity.class);
 

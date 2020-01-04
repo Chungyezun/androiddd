@@ -88,13 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
     // 이미지들을 외장 database 로부터 가져오기 위해 이것을 한다. Async 로 돌릴 수 있으면 그리 하자...
     private void load(){
-        imdatas = Extern_Access.getGalleryImage(this);
-        for(IMfile m : imdatas){
-            ML_Image_Object mlo = new ML_Image_Object(R.drawable.city,null,false);
-            mlo.setPath(m.path);
-            mlo.setImID(m.document_id);
-            img.add(mlo);
-        }
+        app.getNames();
     }
 
 
@@ -108,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA},0);
+        iocustom = new IOcustom();
 
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getApplicationContext());
@@ -115,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
         app = (MyApplication)this.getApplicationContext();
 
         setContentView(R.layout.login); //첫 화면은 login.xml 로
-
+        iocustom.getImName(getAppContext());
         try {
             PackageInfo info = getPackageManager().getPackageInfo(
                     "com.example.project1",
@@ -196,7 +191,6 @@ public class MainActivity extends AppCompatActivity {
 
 
                     //앱 lifecycle (전체 사용 기간) 시작할 때 자동으로 실행되고,
-                    iocustom = new IOcustom();
                     gson = new Gson();
 
                     //contacts 의 값들을 load 해줘야 한다.
