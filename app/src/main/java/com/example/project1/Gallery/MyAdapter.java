@@ -44,6 +44,9 @@ public class MyAdapter extends BaseAdapter
 
     @Override
     public int getCount() {
+        if(app.getNames() == null){
+            return 0;
+        }
         return app.getNames().size();
     }
 

@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.example.project1.Contacts.Contact_Fragment;
 import com.example.project1.Gallery.Gallery_Fragment;
+import com.example.project1.Game.Game_Fragment;
 import com.example.project1.R;
 
 /**
@@ -39,8 +40,8 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                 Gallery_Fragment gf = new Gallery_Fragment();
                 return gf;
             case 2:
-                gf = new Gallery_Fragment();
-                return gf;
+                Game_Fragment gaf = new Game_Fragment();
+                return gaf;
             default:
                 return null;
         }

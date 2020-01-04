@@ -7,8 +7,6 @@ import android.os.AsyncTask;
 import android.util.Base64;
 import android.util.Log;
 
-import com.android.volley.toolbox.HttpResponse;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -453,6 +451,7 @@ public class IOcustom {
 
                     con.setRequestMethod("POST");//POST방식으로 보냄
                     con.setRequestProperty("Cache-Control", "no-cache");//캐시 설정
+                    con.setRequestProperty("Content-Type", "application/json");//application JSON 형식으로 전송
                     con.setRequestProperty("Accept", "application/json");//서버에 response 데이터를 html로 받음
                     con.setDoOutput(true);//Outstream으로 post 데이터를 넘겨주겠다는 의미
                     con.setDoInput(true);//Inputstream으로 서버로부터 응답을 받겠다는 의미
@@ -462,29 +461,13 @@ public class IOcustom {
                     OutputStream outStream = con.getOutputStream();
                     //버퍼를 생성하고 넣음
                     BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outStream));
-                    Log.e("buffer", "sss");
 
-                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                    input_bitmap.compress(Bitmap.CompressFormat.PNG, 90, bos);
-                    byte[] array = bos.toByteArray();
-                    String ba1 = Base64.encodeBytes(array);
-                    ArrayList < NameValuePair > nameValuePairs = new ArrayList < NameValuePair > ();
-                    nameValuePairs.add(new BasicNameValuePair("image",ba1));
-                    try {
-                        HttpClient httpclient = new DefaultHttpClient();
-                        HttpPost httppost = new
-                                HttpPost("URL STRING");
-                        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-                        HttpResponse response = httpclient.execute(httppost);
-                        HttpEntity entity = response.getEntity();
-                        is = entity.getContent();
-                        //Toast.makeText(SignUpActivity.this, "Joining Failed", Toast.LENGTH_SHORT).show();
-                    } catch (Exception e) {
-                        Log.e("log_tag", "Error in http connection " + e.toString());
-                    }
-//                    writer.write(encodeTobase64(input_bitmap));
-//                    writer.flush();
-//                    writer.close();//버퍼를 받아줌
+//                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//                    input_bitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
+//                    byte[] array = bos.toByteArray();
+                    writer.write(encodeTobase64(input_bitmap));
+                    writer.flush();
+                    writer.close();//버퍼를 받아줌
 
                     //서버로 부터 데이터를 받음
                     InputStream stream = con.getInputStream();
