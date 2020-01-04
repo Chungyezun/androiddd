@@ -15,6 +15,17 @@ import java.util.ArrayList;
 
 public class Extern_Access {
     public static ArrayList<IMfile> getGalleryImage(Context context){
+
+        /*
+        * <Flow of downloading task>
+            1. Glide 에서 /Gallery 로 Get Request
+            2. Get 으로부터 LIST OF FILE NAME 가지고 오기
+            3. FILE PATH NAME 으로부터 GLIDE 이용해서 전부 받아오기~~~
+         */
+
+
+
+        /*
         Uri uri;
         Cursor cursor;
         int column_index_data, column_index_folder_name;
@@ -51,6 +62,10 @@ public class Extern_Access {
 
         Log.d("EXTERN_IMLIST_SIZE",""+listOfAllImg.size());
         return listOfAllImg;// 모든 이미지의 filepath 를 돌려준다.
+
+        */
+        return null;
     }
+
 
 }

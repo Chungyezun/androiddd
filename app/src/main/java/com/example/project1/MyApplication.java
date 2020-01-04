@@ -97,7 +97,10 @@ public class MyApplication extends Application {
     // 이미지들을 외장 database 로부터 가져오기 위해 이것을 한다. Async 로 돌릴 수 있으면 그리 하자...
     private void load(){
         imdatas = Extern_Access.getGalleryImage(getApplicationContext());
-        Log.d("IMDATASIZE",imdatas.size() +"");
+        //Log.d("IMDATASIZE",imdatas.size() +"");
+        if(imdatas == null){
+            return;
+        }
         img.clear();
         for(IMfile m : imdatas){
             ML_Image_Object mlo = new ML_Image_Object(R.drawable.city,null,false);
