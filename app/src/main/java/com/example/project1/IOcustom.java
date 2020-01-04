@@ -51,6 +51,7 @@ import static com.example.project1.MyApplication.getAppContext;
 import static java.sql.DriverManager.println;
 
 public class IOcustom {
+    String forwardURL = "https://27aa638c.ngrok.io";
     String input_data;
     String write_data;
     Bitmap input_bitmap;
@@ -58,21 +59,21 @@ public class IOcustom {
     public void writeToFile(String data, Context context) {
         // Exception 이 안 뜨면, Contacts.json 에 data string 저장. contexts 는 이 앱으로 준다.
         input_data = data;
-        new JSONTaskWrite().execute("http://cs497madcampproj2yeah.localtunnel.me/post");
+        new JSONTaskWrite().execute(forwardURL+"/post");
     }
 
     public void deleteFile(String data, Context context) {
         // Exception 이 안 뜨면, Contacts.json 에 data string 저장. contexts 는 이 앱으로 준다.
         input_data = data;
-        new JSONTaskWrite().execute("http://cs497madcampproj2yeah.localtunnel.me/editcontacts");
+        new JSONTaskWrite().execute(forwardURL+"/editcontacts");
     }
 
     public void readFromFile(Context context) {
-        new JSONTaskRead().execute("http://cs497madcampproj2yeah.localtunnel.me/contacts");
+        new JSONTaskRead().execute(forwardURL+"/contacts");
     }
 
     public void getImName(Context context) {
-        new JSONgetNames().execute("http://cs497madcampproj2yeah.localtunnel.me/image");
+        new JSONgetNames().execute(forwardURL+"/image");
     }
 
     public static String get64BaseImage (Bitmap bmp) {
@@ -85,16 +86,15 @@ public class IOcustom {
 
     public void sendImage(Bitmap data, Context context){
 
-
-
-        String filename = UUID.randomUUID().toString();
+        String filename = UUID.randomUUID().toString() + ".jpg";
+        Log.e("IMGFILENAME",filename);
         File f = new File(context.getCacheDir(), filename);
         try{
             f.createNewFile();
         }catch(IOException e){
+            Log.e("IMGFILENAME","IOException");
             return;
         }
-
 //Convert bitmap to byte array
         Bitmap bitmap = data;
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
