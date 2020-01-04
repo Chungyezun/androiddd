@@ -17,6 +17,7 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import com.android.volley.toolbox.Volley;
 import com.example.project1.Contacts.AddContact;
 import com.example.project1.Contacts.Contact;
 import com.example.project1.ui.MainUI.SectionsPagerAdapter;
@@ -87,6 +88,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //Turn on volley!
+        if(AppHelper.requestQueue == null){
+            AppHelper.requestQueue = Volley.newRequestQueue(getAppContext());
+        }
+
         requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA},0);
         iocustom = new IOcustom();
 
