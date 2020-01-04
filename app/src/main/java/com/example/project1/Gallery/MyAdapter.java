@@ -16,8 +16,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.example.project1.MLthings.ML_Fragment;
-import com.example.project1.MLthings.ML_Image_Object;
 import com.example.project1.MyApplication;
 import com.example.project1.R;
 
@@ -26,7 +24,6 @@ import java.util.List;
 
 public class MyAdapter extends BaseAdapter
 {
-    private List<ML_Image_Object> img;
     private Context mContext;
     private MyApplication app;
     private int layout;
@@ -47,13 +44,12 @@ public class MyAdapter extends BaseAdapter
 
     @Override
     public int getCount() {
-
         return app.getNames().size();
     }
 
     @Override
     public Object getItem(int position) {
-        return img.get(position);
+        return null;
     }
 
     @Override
@@ -65,19 +61,9 @@ public class MyAdapter extends BaseAdapter
     public View getView(int position, View convertView, ViewGroup parent) {
         if(convertView == null)convertView = inf.inflate(layout, parent, false);
         ImageView imageView = convertView.findViewById(R.id.imageView1);
-        //View imageView = (View) convertView;
-
-        //if(imageView == null){
-            //imageView = new ImageView(mContext);
-            //imageView.setLayoutParams(new GridView.LayoutParams(350,450));
-            //imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        //}
-        //imageView.findViewById(R.id.ML_ImageView);
 
         List<String> imnames = app.getNames();
-
         Log.e("SERVER_REQUEST",url + imnames.get(position));
-
         Glide.with(mContext)
             .load(url +'/'+ imnames.get(position))
             .diskCacheStrategy(DiskCacheStrategy.ALL)

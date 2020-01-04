@@ -22,7 +22,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.project1.MLthings.ML_Image_Object;
 import com.example.project1.MainActivity;
 import com.example.project1.MyApplication;
 import com.example.project1.R;
@@ -61,8 +60,6 @@ public class Gallery_Fragment extends Fragment {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-               // ML_Image_Object item_pos = img.get(position);
-               // ShowDialogBox(item_pos);
 
             }
         });
@@ -101,7 +98,7 @@ public class Gallery_Fragment extends Fragment {
         return view;
 
     }
-
+/*
     private void ShowDialogBox(final ML_Image_Object img)
     {
         final Dialog dialog = new Dialog(getActivity());
@@ -160,5 +157,7 @@ public class Gallery_Fragment extends Fragment {
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
     }
+
+ */
 }
 

@@ -1,4 +1,4 @@
-package com.example.project1.MLthings;
+package com.example.project1.Gallery;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -20,6 +20,6 @@ public class SquareGridView extends LinearLayout {
 
     @Override
     public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-            super.onMeasure(widthMeasureSpec, widthMeasureSpec);
+        super.onMeasure(widthMeasureSpec, widthMeasureSpec);
     }
 }

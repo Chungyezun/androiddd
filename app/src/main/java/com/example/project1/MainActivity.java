@@ -18,16 +18,11 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.example.project1.Contacts.AddContact;
 import com.example.project1.Contacts.Contact;
-import com.example.project1.Gallery.Extern_Access;
-import com.example.project1.Gallery.IMfile;
-import com.example.project1.MLthings.ML_Image_Object;
 import com.example.project1.ui.MainUI.SectionsPagerAdapter;
-import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
-import com.facebook.GraphRequest;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
@@ -35,12 +30,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 
-import org.json.JSONObject;
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,15 +44,12 @@ public class MainActivity extends AppCompatActivity {
     private int tabPosition;
     private CallbackManager callbackManager;
     LoginButton loginButton;
+    private boolean Logged_in = false;
 
     private Map<String, String> cache = new HashMap<>();
 
     Gson gson;
     IOcustom iocustom;
-    private List<ML_Image_Object> img = new ArrayList<>();
-    List<IMfile> imdatas = new ArrayList<>();
-    private static ML_Image_Object tmp = new ML_Image_Object(R.drawable.a,null,false);
-    private static ML_Image_Object tmp2 = new ML_Image_Object(R.drawable.city,null,false);
     private static final String TAG = "MainActivity";
     protected MyApplication app;
 
@@ -83,13 +72,8 @@ public class MainActivity extends AppCompatActivity {
     public List<Contact> getContacts(){
         return contacts;
     }
-    public List<ML_Image_Object> getImg(){return img;}
-
 
     // 이미지들을 외장 database 로부터 가져오기 위해 이것을 한다. Async 로 돌릴 수 있으면 그리 하자...
-    private void load(){
-        app.getNames();
-    }
 
 
 
@@ -108,127 +92,110 @@ public class MainActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
 
         app = (MyApplication)this.getApplicationContext();
-
-        setContentView(R.layout.login); //첫 화면은 login.xml 로
         iocustom.getImName(getAppContext());
-        try {
-            PackageInfo info = getPackageManager().getPackageInfo(
-                    "com.example.project1",
-                    PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+
+        if(!Logged_in) {
+            setContentView(R.layout.login); //첫 화면은 login.xml 로
+            try {
+                PackageInfo info = getPackageManager().getPackageInfo(
+                        "com.example.project1",
+                        PackageManager.GET_SIGNATURES);
+                for (Signature signature : info.signatures) {
+                    MessageDigest md = MessageDigest.getInstance("SHA");
+                    md.update(signature.toByteArray());
+                    Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+                }
+            } catch (PackageManager.NameNotFoundException e) {
+            } catch (NoSuchAlgorithmException e) {
             }
-        }
-        catch (PackageManager.NameNotFoundException e) {
-        }
-        catch (NoSuchAlgorithmException e) {
-        }
-
-
-
-
-        callbackManager = CallbackManager.Factory.create();
-
-
-        loginButton = (LoginButton) findViewById(R.id.login_button);
-
-        // Callback registration
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            callbackManager = CallbackManager.Factory.create();
+            loginButton = (LoginButton) findViewById(R.id.login_button);
+            // Callback registration
+            loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
                 @Override
-            public void onSuccess(LoginResult loginResult) {
-                    ///////////////////////////////////////////////////////////////////////////////////////////////
-                    //Viewpager 및 Adapter 를 만들어주자
+                public void onSuccess(LoginResult loginResult) {
+                    Logged_in = true;
+                }
 
-                    Log.e("Error","success");
-                    setContentView(R.layout.activity_main);
-                    SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getAppContext(), getSupportFragmentManager());
-                    ViewPager viewPager = findViewById(R.id.view_pager);
-                    viewPager.setAdapter(sectionsPagerAdapter);
+                @Override
+                public void onCancel() {
+                    // App code
+                    Log.e("Error", "cancel");
+                }
 
-                    //TabLayout object (UI에 있는 것) 에 적용시키자
-                    final TabLayout tabs = findViewById(R.id.tabs);
-                    tabs.setupWithViewPager(viewPager);
+                @Override
+                public void onError(FacebookException exception) {
+                    // App code
+                    Log.e("Error", "error");
+                }
+            });
 
-                    //FAB
-                    final FloatingActionButton fab = findViewById(R.id.fab);
+///////////////////////////////////////////////////////////////////////////////////////////////
+            //Viewpager 및 Adapter 를 만들어주자
 
-                    fab.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            buttonDo(tabPosition);
-                        }
-                    });
+            Log.e("Error", "success");
+        }
+        setContentView(R.layout.activity_main);
+        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getAppContext(), getSupportFragmentManager());
+        ViewPager viewPager = findViewById(R.id.view_pager);
+        viewPager.setAdapter(sectionsPagerAdapter);
 
-                    tabs.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager){
-                        @Override
-                        public void onTabSelected(TabLayout.Tab tab){
-                            tabPosition = tabs.getSelectedTabPosition();
-                            if(tabPosition!= 0){
-                                fab.setImageResource(R.drawable.ic_action_name);
-                            }else{
-                                fab.setImageResource(R.drawable.ic_action_add);
-                            }
-                        }
-                        @Override
-                        public void onTabUnselected(TabLayout.Tab tab){
+        //TabLayout object (UI에 있는 것) 에 적용시키자
+        final TabLayout tabs = findViewById(R.id.tabs);
+        tabs.setupWithViewPager(viewPager);
 
-                        }
+        //FAB
+        final FloatingActionButton fab = findViewById(R.id.fab);
 
-                        @Override
-                        public void onTabReselected(TabLayout.Tab tab){
-
-                        }
-                    });
-                    // 이미지의 List 로 구현을 하겠습니다.
-
-                    /*IMAGE DATABASE 로딩!!!!*/
-                    //1. EXTERN_ACCESS class 안에 있는 함수들로 IMfile List 불러오기
-
-                    /*IMAGE DATABASE 로딩 끝*/
-                    load();
-
-
-                    //앱 lifecycle (전체 사용 기간) 시작할 때 자동으로 실행되고,
-                    gson = new Gson();
-
-                    //contacts 의 값들을 load 해줘야 한다.
-                    iocustom.readFromFile(getAppContext()); //파일 열기
-
-                    //로딩 완료
-                    //로딩 완료가 되었으니, 이 값들을 sharedPreference 로 넘기자...
-                    Button btn_custom_logout = (Button) findViewById(R.id.logout_button);
-
-                    btn_custom_logout.setOnClickListener(new View.OnClickListener() {
-
-                        @Override
-
-                        public void onClick(View view) {
-
-                            LoginManager.getInstance().logOut();
-
-                        }
-
-                    });
-
-///////////////////////////////////////////////////////////////////
-            }
-
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCancel() {
-                // App code
-                Log.e("Error","cancel");
-            }
-
-            @Override
-            public void onError(FacebookException exception) {
-                // App code
-                Log.e("Error","error");
+            public void onClick(View view) {
+                buttonDo(tabPosition);
             }
         });
 
+        tabs.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager){
+            @Override
+            public void onTabSelected(TabLayout.Tab tab){
+                tabPosition = tabs.getSelectedTabPosition();
+                if(tabPosition!= 0){
+                    fab.setImageResource(R.drawable.ic_action_name);
+                }else{
+                    fab.setImageResource(R.drawable.ic_action_add);
+                }
+            }
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab){
 
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab){
+
+            }
+        });
+
+        app.getNames();         //이미지 데이터베이스 업데이트
+
+        gson = new Gson();      //
+
+        //CONTACTS 불러오기!!!
+        iocustom.readFromFile(getAppContext()); //전화번호부 업데이트
+
+        //로딩 완료가 되었으니, 이 값들을 sharedPreference 로 넘기자...
+        Button btn_custom_logout = (Button) findViewById(R.id.logout_button);
+
+        btn_custom_logout.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+
+            public void onClick(View view) {
+                LoginManager.getInstance().logOut();
+            }
+
+        });
+
+///////////////////////////////////////////////////////////////////
 
     }
     @Override
