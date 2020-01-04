@@ -11,6 +11,7 @@ import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
@@ -203,6 +204,19 @@ public class MainActivity extends AppCompatActivity {
 
                     //로딩 완료
                     //로딩 완료가 되었으니, 이 값들을 sharedPreference 로 넘기자...
+                    Button btn_custom_logout = (Button) findViewById(R.id.logout_button);
+
+                    btn_custom_logout.setOnClickListener(new View.OnClickListener() {
+
+                        @Override
+
+                        public void onClick(View view) {
+
+                            LoginManager.getInstance().logOut();
+
+                        }
+
+                    });
 
 ///////////////////////////////////////////////////////////////////
             }
