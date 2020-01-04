@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private CallbackManager callbackManager;
     LoginButton loginButton;
     private boolean Logged_in = false;
+    private static final int CAMERA_REQUEST = 1888;
 
     private Map<String, String> cache = new HashMap<>();
 
@@ -55,16 +57,16 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void buttonDo(int idx){
-        final Intent camIntent = new Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
+        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         if(idx == 0) {
             Intent intent = new Intent(this, AddContact.class);
             Log.e("TAB_PRESS", "0");
             startActivity(intent); // intent 를 통해 새 activity 에 접속?
         }else if(idx == 1) {
-                startActivity(camIntent);
+                startActivityForResult(cameraIntent,CAMERA_REQUEST);
                 Log.e("TAB_PRESS", "1");
         }else{
-                startActivity(camIntent);
+                startActivityForResult(cameraIntent,CAMERA_REQUEST);
                 Log.e("TAB_PRESS","2");
         }
     }
@@ -202,6 +204,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CAMERA_REQUEST) {
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            Log.e("camera","aaa");
+            iocustom.sendImage(photo,this);
+        }
+
     }
 
     protected void onResume(){
