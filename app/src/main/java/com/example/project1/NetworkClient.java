@@ -14,7 +14,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 
 public class NetworkClient {
-    private static final String BASE_URL = "https://27aa638c.ngrok.io/";
+    private static final String BASE_URL = "http://b5adc0ac.ngrok.io";
     private static Retrofit retrofit;
     public static Retrofit getRetrofitClient(Context context) {
         if (retrofit == null) {

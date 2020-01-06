@@ -28,7 +28,7 @@ public class MyAdapter extends BaseAdapter
     private MyApplication app;
     private int layout;
     LayoutInflater inf;
-    String url = "https://27aa638c.ngrok.io/image";
+    String url = "http://b5adc0ac.ngrok.io/image";
 
 
     public MyAdapter(int layout, Context mContext)
@@ -44,6 +44,9 @@ public class MyAdapter extends BaseAdapter
 
     @Override
     public int getCount() {
+        if(app.getNames() == null){
+            return 0;
+        }
         return app.getNames().size();
     }
 

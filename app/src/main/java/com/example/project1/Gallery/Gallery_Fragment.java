@@ -98,8 +98,8 @@ public class Gallery_Fragment extends Fragment {
         return view;
 
     }
-/*
-    private void ShowDialogBox(final ML_Image_Object img)
+    /*
+    private void ShowDialogBox(final String img)
     {
         final Dialog dialog = new Dialog(getActivity());
 
@@ -158,6 +158,8 @@ public class Gallery_Fragment extends Fragment {
         dialog.show();
     }
 
- */
+    */
+
+
 }
 
