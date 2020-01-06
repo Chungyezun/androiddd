@@ -1,6 +1,7 @@
 package com.example.project1;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -155,6 +156,8 @@ public class MainActivity extends AppCompatActivity {
         //FAB
         final FloatingActionButton fab = findViewById(R.id.fab);
 
+        final Button btn_custom_logout = (Button) findViewById(R.id.logout_button);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -163,13 +166,22 @@ public class MainActivity extends AppCompatActivity {
         });
 
         tabs.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager){
+            @SuppressLint("RestrictedApi")
             @Override
             public void onTabSelected(TabLayout.Tab tab){
                 tabPosition = tabs.getSelectedTabPosition();
-                if(tabPosition!= 0){
-                    fab.setImageResource(R.drawable.ic_action_name);
-                }else{
+                if(tabPosition == 0){
                     fab.setImageResource(R.drawable.ic_action_add);
+                    fab.setVisibility(View.VISIBLE);
+                    btn_custom_logout.setVisibility(View.VISIBLE);
+                }else if(tabPosition == 1){
+                    fab.setImageResource(R.drawable.ic_action_name);
+                    fab.setVisibility(View.VISIBLE);
+                    btn_custom_logout.setVisibility(View.VISIBLE);
+                }else{
+                    fab.setVisibility(View.INVISIBLE);
+                    btn_custom_logout.setVisibility(View.INVISIBLE);
+
                 }
             }
             @Override
@@ -191,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
         iocustom.readFromFile(getAppContext()); //전화번호부 업데이트
 
         //로딩 완료가 되었으니, 이 값들을 sharedPreference 로 넘기자...
-        Button btn_custom_logout = (Button) findViewById(R.id.logout_button);
+
 
         btn_custom_logout.setOnClickListener(new View.OnClickListener() {
 

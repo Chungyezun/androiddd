@@ -156,6 +156,7 @@ public class MyApplication extends Application {
         return MyApplication.context;
     }
     public static void getPosition(){
+
         locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(10 * 1000); // 10 seconds
@@ -169,6 +170,7 @@ public class MyApplication extends Application {
                 for (Location location : locationResult.getLocations()) {
                     if (location != null) {
                         myPlayer.setLocation(location.getLatitude(),location.getLongitude());
+
                     }
                 }
                 if (mFusedLocationClient != null) {

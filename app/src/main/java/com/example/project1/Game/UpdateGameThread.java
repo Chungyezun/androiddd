@@ -41,6 +41,7 @@ public class UpdateGameThread extends Thread{
     String getURL = "http://b1b3f083.ngrok.io/getPlayer";
     String setURL = "http://b1b3f083.ngrok.io/postPlayer/";
 
+
     public void updateUS(){
         Gson gson = new Gson();
 
@@ -104,6 +105,7 @@ public class UpdateGameThread extends Thread{
                 //종료가 되면 disconnect 메소드를 호출한다.
                 if (con2 != null) {
                     con2.disconnect();
+
                 }
                 try {
                     //버퍼를 닫아준다.
@@ -114,6 +116,7 @@ public class UpdateGameThread extends Thread{
                     e.printStackTrace();
                 }
             }//finally 부분
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -190,6 +193,7 @@ public class UpdateGameThread extends Thread{
     }
     public void run() {
         Log.e("THREAD", "Game Thread Started");
+
 
         //1. Get GPS Data and form Player Information Chart.
         // Location Update 명령

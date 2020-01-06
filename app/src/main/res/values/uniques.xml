@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name = "직업">
+        <item>직업1</item>
+        <item>직업2</item>
+        <item>직업3</item>
+        <item>직업4</item>
+        <item>직업5</item>
+        <item>직업6</item>
+        <item>직업7</item>
+    </string-array>
+</resources>
