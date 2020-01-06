@@ -3,9 +3,19 @@ package com.example.project1;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.location.Location;
+import android.location.LocationManager;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.example.project1.Contacts.Contact;
+import com.example.project1.Game.Player;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -15,9 +25,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executor;
 
 public class MyApplication extends Application {
 
+    private static FusedLocationProviderClient fusedLocationClient;
     //내부 저장소를 사용할 일이 많을 것 같아, context 를 global variable로 저장하려 한다!
     private static Context context;
 
@@ -26,6 +38,8 @@ public class MyApplication extends Application {
     private List<Contact> contacts = new ArrayList<>();
     private Map<String, String> cache = new HashMap<>();
     private List<String> imgNames;
+    private static Player myPlayer;
+    private static List<Player> allPlayers;
 
     Gson gson;
     IOcustom iocustom;
@@ -39,6 +53,7 @@ public class MyApplication extends Application {
     }
 
     public void onCreate(){
+        myPlayer = new Player("Chulsoo","01023451234");
         super.onCreate();
         iocustom = new IOcustom();
          imgNames = new ArrayList<>();
@@ -95,12 +110,10 @@ public class MyApplication extends Application {
         Contact[] array = gson.fromJson(jsonString, Contact[].class); //json 에서 얻어가기
         List<Contact> ncontacts = new ArrayList<>();
         if(ncontacts == null || array == null){
-    //
         }else{
             Collections.addAll(ncontacts,array);
             this.contacts = ncontacts;                       //여기 local variable 도 덮어쓰기
         }
-
     }
 
     public void updateNames(String jsonString){
@@ -118,10 +131,31 @@ public class MyApplication extends Application {
         iocustom.getImName(context); // Name 리스트 업데이트도 겸함..
         return this.imgNames;
     }
-
+    public List<Player> getAllPlayers(){
+        return this.allPlayers;
+    }
+    public void setAllPlayers(List<Player> allPlayers){
+        this.allPlayers = allPlayers;
+    }
+    public Player getMyPlayer(){
+        return this.myPlayer;
+    }
     // context 를 불러와야 할 때 이것을 불러주면 된다!
     public static Context getAppContext(){
         return MyApplication.context;
     }
+    public static void getPosition(){
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getAppContext());
 
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener( new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        // Got last known location. In some rare situations this can be null.
+                        if (location != null) {
+                            myPlayer.setLocation(location);
+                        }
+                    }
+                });
+    }
 }

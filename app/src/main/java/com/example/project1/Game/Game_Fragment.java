@@ -21,6 +21,8 @@ import com.example.project1.Tab3Activity;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.project1.MyApplication.getAppContext;
+
 
 public class Game_Fragment extends Fragment {
     MyApplication app;
@@ -42,6 +44,9 @@ public class Game_Fragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        app = (MyApplication) getAppContext();
+        UpdateGameThread ugthread = new UpdateGameThread(app);
+        ugthread.start();
 
     }
 

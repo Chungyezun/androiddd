@@ -20,7 +20,8 @@ android {
     sourceSets { main { java.srcDirs = ['src/main/java', 'src/main/java/com.example.project1'] } }
 }
 dependencies {
-
+    implementation 'com.google.android.gms:play-services-games:19.0.0'
+    implementation 'com.google.android.gms:play-services-location:17.0.0'
     implementation 'com.github.bumptech.glide:glide:3.7.0'
     implementation 'com.android.volley:volley:1.1.1'
     implementation 'com.google.firebase:firebase-ml-vision:24.0.1'
