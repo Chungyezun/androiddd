@@ -7,6 +7,11 @@ import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.location.Address;
 import android.location.Geocoder;
@@ -39,8 +44,10 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -54,6 +61,7 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
 
     private GoogleMap mGoogleMap;
     private MyApplication app;
+
 
 
     @Override
@@ -93,6 +101,7 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
                 + String.valueOf(screenPt.y) + ")");
     }
 
+
     /**
      * 초기화
      * @author
@@ -122,5 +131,11 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
             optFirst.title("Current Position");// 제목 미리보기
             optFirst.snippet("Snippet");
             mGoogleMap.addMarker(optFirst).showInfoWindow();
+            CircleOptions circle1KM = new CircleOptions().center(latLng)
+                    .radius(1000)
+                    .strokeWidth(0f)
+                    .fillColor(Color.parseColor("#880000ff"));
+            mGoogleMap.addCircle(circle1KM);
     }
+
 }
