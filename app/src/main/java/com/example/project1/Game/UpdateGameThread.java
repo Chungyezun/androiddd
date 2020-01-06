@@ -38,27 +38,23 @@ public class UpdateGameThread extends Thread{
     String getURL = "http://b1b3f083.ngrok.io/getPlayer";
     String setURL = "http://b1b3f083.ngrok.io/postPlayer/";
 
-    public void updateMe(){
+    public void updateUS(){
         Gson gson = new Gson();
-        try{
-            Thread.sleep(1000);
-        }catch(InterruptedException e){
 
-        }
         app.getPosition();
 
         //2. Get List of All Players
         try {
-            HttpURLConnection con = null;
+            HttpURLConnection con2 = null;
             BufferedReader reader = null;
             try {
                 url = new URL(getURL);//url을 가져온다.
-                con = (HttpURLConnection) url.openConnection();
-                con.connect();//연결 수행
+                con2 = (HttpURLConnection) url.openConnection();
+                con2.connect();//연결 수행
                 InputStream stream;
                 //입력 스트림 생성
                 try {
-                    stream = con.getInputStream();
+                    stream = con2.getInputStream();
                 } catch (FileNotFoundException e) {
                     return;
                 }
@@ -103,8 +99,8 @@ public class UpdateGameThread extends Thread{
                 e.printStackTrace();
             } finally {
                 //종료가 되면 disconnect 메소드를 호출한다.
-                if (con != null) {
-                    con.disconnect();
+                if (con2 != null) {
+                    con2.disconnect();
                 }
                 try {
                     //버퍼를 닫아준다.
@@ -120,13 +116,12 @@ public class UpdateGameThread extends Thread{
             e.printStackTrace();
         }
     }
-    public void updateUS(){
+    public void updateMe(){
         Gson gson = new Gson();
         String pjson;
         Player myPlayer = app.getMyPlayer();
         pjson = gson.toJson(myPlayer);
         Log.e("PJ",pjson);
-
         try {
             //JSONObject를 만들고 key value 형식으로 값을 저장해준다.
             //리스트를 json 으로 만들자
@@ -186,17 +181,20 @@ public class UpdateGameThread extends Thread{
     }
     public void run() {
         Log.e("THREAD","Game Thread Started");
+        try{
+            Thread.sleep(1000);
+        }catch(InterruptedException e){
+
+        }
         //1. Get GPS Data and form Player Information Chart.
         // Location Update 명령
 
-        Gson gson = new Gson();
         while (true) { // 1초마다 여기서 Connection을 유지해보자..////////////////////////////////////////////////
             //1. My Location Update
-
-            updateMe();
+            updateUS();
             Log.e("FIN","finished Get Request");
             //3. Update My Player Information
-            updateUS();
+            updateMe();
 
 
         }
