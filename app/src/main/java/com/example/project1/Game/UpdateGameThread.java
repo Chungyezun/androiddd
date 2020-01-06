@@ -141,9 +141,9 @@ public class UpdateGameThread extends Thread{
                 con.setRequestMethod("POST");//POST방식으로 보냄
                 con.setRequestProperty("Cache-Control", "no-cache");//캐시 설정
                 con.setRequestProperty("Content-Type", "application/json");//application JSON 형식으로 전송
-                con.setRequestProperty("Accept", "application/json");//서버에 response 데이터를 html로 받음
+                //con.setRequestProperty("Accept", "application/json");//서버에 response 데이터를 html로 받음
                 con.setDoOutput(true);//Outstream으로 post 데이터를 넘겨주겠다는 의미
-                con.setDoInput(true);//Inputstream으로 서버로부터 응답을 받겠다는 의미
+                //con.setDoInput(true);//Inputstream으로 서버로부터 응답을 받겠다는 의미
                 con.connect();
 
                 Log.e("C","Connection Made");
@@ -195,8 +195,6 @@ public class UpdateGameThread extends Thread{
             Log.e("FIN","finished Get Request");
             //3. Update My Player Information
             updateMe();
-
-
         }
     }
 }
