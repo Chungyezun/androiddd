@@ -5,6 +5,9 @@ import android.app.Application;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -47,6 +50,10 @@ public class MyApplication extends Application {
     private static LocationRequest locationRequest;
     private static LocationCallback locationCallback;
     private static FusedLocationProviderClient mFusedLocationClient;
+    private static String URL = "http://b1b3f083.ngrok.io/";
+    public String getURL(){
+        return this.URL;
+    }
 
     Gson gson;
     IOcustom iocustom;
@@ -70,8 +77,6 @@ public class MyApplication extends Application {
         // 이미지의 List 로 구현을 하겠습니다.
 
         //image loading
-        iocustom.getImName(context);        //image loading done
-
 
         //앱 lifecycle (전체 사용 기간) 시작할 때 자동으로 실행되고,
         MyApplication.context = getApplicationContext();
@@ -83,14 +88,6 @@ public class MyApplication extends Application {
         iocustom.getImName(context);
 
 
-        /*
-        if(json == null){
-            Log.e("login activity","Non-existing DATABASE");
-        }else{
-            Contact[] array = gson.fromJson(json, Contact[].class); //json 에서 얻어가기
-            Collections.addAll(contacts,array);
-        }
-         */
         //contacts loading done
 
         //Cache loading
@@ -103,6 +100,7 @@ public class MyApplication extends Application {
     }
 
     public List<Contact> getContacts(){
+        iocustom.getImName(context);
         return contacts;
     }
 
@@ -178,6 +176,9 @@ public class MyApplication extends Application {
                 }
             }
         };
-        mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
+        HandlerThread handlerThread = new HandlerThread("MHT");
+        handlerThread.start();
+        Looper looper = handlerThread.getLooper();
+        mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, looper);
     }
 }

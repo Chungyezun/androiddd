@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/swiperefreshCNT"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context=".ScrollingActivity">
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/contactRV"
+    android:layout_height="match_parent">
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="bottom" />
+        android:fitsSystemWindows="true"
+        tools:context=".ScrollingActivity">
 
-</FrameLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/contactRV"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom" />
+
+    </FrameLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

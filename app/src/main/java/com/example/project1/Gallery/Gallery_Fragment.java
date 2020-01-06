@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.project1.MainActivity;
 import com.example.project1.MyApplication;
 import com.example.project1.R;
@@ -37,8 +39,8 @@ public class Gallery_Fragment extends Fragment {
 
     MyApplication app;
     SwipeRefreshLayout swl;
-
-    //private List<ML_Image_Object> img;
+    MyAdapter mAdapter;
+    //private List<ML_Image_Objec  t> img;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,7 +54,7 @@ public class Gallery_Fragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_gallery_,container,false);
-
+        mAdapter = new MyAdapter(R.layout.row,app);
 
         final GridView gridView = (GridView)view.findViewById(R.id.myGrid);
         gridView.setAdapter(new MyAdapter(R.layout.row,app));
@@ -60,7 +62,7 @@ public class Gallery_Fragment extends Fragment {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                ShowDialogBox(position);
             }
         });
 
@@ -70,8 +72,10 @@ public class Gallery_Fragment extends Fragment {
             public void onRefresh() {
                 app.getNames();
 
-                MyAdapter nAdapter = new MyAdapter(R.layout.row,app);
-                gridView.setAdapter(nAdapter);
+                //MyAdapter nAdapter = new MyAdapter(R.layout.row,app);
+                mAdapter.notifyDataSetChanged();
+                gridView.invalidateViews();
+
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run(){
@@ -98,8 +102,8 @@ public class Gallery_Fragment extends Fragment {
         return view;
 
     }
-    /*
-    private void ShowDialogBox(final String img)
+
+    private void ShowDialogBox(final int i)
     {
         final Dialog dialog = new Dialog(getActivity());
 
@@ -111,13 +115,16 @@ public class Gallery_Fragment extends Fragment {
         Button btn_Full = dialog.findViewById(R.id.btn_full);
         Button btn_Close = dialog.findViewById(R.id.btn_close);
 
-        String path = img.getPath();
-        String title = path.substring(path.lastIndexOf("/")+1);
+        Log.d("ImDialog",app.getURL() +"image/"+ app.getNames().get(i));
+        Glide.with(getAppContext())
+                .load(app.getURL() +"image/"+ app.getNames().get(i))
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(Image);
 
-        //extracting name
 
-        int index = title.indexOf("/");
-        final String name = title.substring(index+1,title.length());
+        //String path = img.getPath();
+
+        final String name = app.getNames().get(i);
         Image_name.setText(name);
         //File f1 = new File(img.getPath());
         //Glide
@@ -158,7 +165,6 @@ public class Gallery_Fragment extends Fragment {
         dialog.show();
     }
 
-    */
 
 
 }

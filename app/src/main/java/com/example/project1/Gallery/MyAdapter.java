@@ -28,7 +28,7 @@ public class MyAdapter extends BaseAdapter
     private MyApplication app;
     private int layout;
     LayoutInflater inf;
-    String url = "http://b5adc0ac.ngrok.io/image";
+    String url = "http://b1b3f083.ngrok.io/image";
 
 
     public MyAdapter(int layout, Context mContext)
@@ -39,7 +39,6 @@ public class MyAdapter extends BaseAdapter
         this.inf = (LayoutInflater) mContext.getSystemService
                 (Context.LAYOUT_INFLATER_SERVICE);
     }
-
 
 
     @Override
@@ -66,7 +65,7 @@ public class MyAdapter extends BaseAdapter
         ImageView imageView = convertView.findViewById(R.id.imageView1);
 
         List<String> imnames = app.getNames();
-        Log.e("SERVER_REQUEST",url + imnames.get(position));
+        Log.e("SERVER_REQUEST",url +'/'+ imnames.get(position));
         Glide.with(mContext)
             .load(url +'/'+ imnames.get(position))
             .diskCacheStrategy(DiskCacheStrategy.ALL)
