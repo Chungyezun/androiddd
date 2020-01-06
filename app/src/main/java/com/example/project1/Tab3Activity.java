@@ -104,7 +104,7 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
         //지도타입 - 일반
         mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         battleRadius = new CircleOptions()
-                .center( new LatLng(app.getMyPlayer().getLocation().first,app.getMyPlayer().getLocation().second))
+            .center( new LatLng(app.getMyPlayer().getLocation().first,app.getMyPlayer().getLocation().second))
                 .radius(50)
                 .fillColor(Color.parseColor("#880000ff"))
                 .strokeWidth(0f)
@@ -129,7 +129,7 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
                 if(!app.getAllPlayers().get(i).getName().equals(app.getMyPlayer().getName()) ){
                     CircleOptions otherCircles = new CircleOptions()
                             .center( new LatLng(app.getAllPlayers().get(i).getLocation().first,app.getAllPlayers().get(i).getLocation().second))
-                            .radius(5)
+                            .radius(12)
                             .fillColor(Color.parseColor("#8800ff00"))
                             .clickable(true);
                     enemies.add(otherCircles);
@@ -212,25 +212,24 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
         //mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 15));
 
         // GPS 사용유무 가져오기
-        double latitude = pos.first;
-        double longitude = pos.second;
+            double latitude = pos.first;
+            double longitude = pos.second;
 
-        // Creating a LatLng object for the current location
-        LatLng latLng = new LatLng(latitude,longitude);
+            // Creating a LatLng object for the current location
+            LatLng latLng = new LatLng(latitude,longitude);
 
-        // Showing the current location in Google Map
-        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+            // Showing the current location in Google Map
+            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 
-        // Map 을 zoom 합니다.
-        mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(20));
+            // Map 을 zoom 합니다.
+            mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(20));
 
-        // 마커 설정.
-        MarkerOptions optFirst = new MarkerOptions();
-        optFirst.position(latLng);// 위도 • 경도
-        optFirst.title("Current Position");// 제목 미리보기
-        optFirst.snippet("Snippet");
-        mGoogleMap.addMarker(optFirst).showInfoWindow();
-        t.start();
+            // 마커 설정.
+            MarkerOptions optFirst = new MarkerOptions();
+            optFirst.position(latLng);// 위도 • 경도
+            optFirst.title("Current Position");// 제목 미리보기
+            optFirst.snippet("Snippet");
+            mGoogleMap.addMarker(optFirst).showInfoWindow();
+            t.start();
     }
 }
-

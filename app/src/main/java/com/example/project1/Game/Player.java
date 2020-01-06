@@ -4,7 +4,7 @@ import android.location.Location;
 
 import androidx.core.util.Pair;
 
-public class Player implements Comparable{
+public class Player {
     private String name;
     private String unique;
 
@@ -13,13 +13,10 @@ public class Player implements Comparable{
     private double Latitude;
     private double Longitude;
 
-
-
     /* 플레이어의 직업을 설정하자!!!
 
 
     */
-
 
     //private Location location;
     private Pair<Double,Double> getPos(){
@@ -32,12 +29,7 @@ public class Player implements Comparable{
     public String getUnique(){
         return unique;
     }
-    public int getHP(){
-        return hp;
-    }
-    public int getMAXhp(){
-        return MAX_HP;
-    }
+
     public Pair<Double,Double> getLocation(){
         return new Pair(this.Latitude,this.Longitude);
     }
@@ -45,7 +37,6 @@ public class Player implements Comparable{
         this.Latitude = Latitude;
         this.Longitude = Longitude;
     }
-
 
     public void Heal(int amount){
         this.hp = this.hp + amount;
@@ -62,15 +53,8 @@ public class Player implements Comparable{
         return true;
     }
 
-    public Player(String nName, String nUnique, int nMaxHP, int nHP){
+    public Player(String nName, String nUnique){
         name = nName;
         unique = nUnique;
-        hp = nHP;
-        MAX_HP = nMaxHP;
-    }
-
-    @Override
-    public int compareTo(Object o) {
-        return (this.hp - ((Player)o).hp);
     }
 }
