@@ -129,12 +129,12 @@ public class UpdateGameThread extends Thread{
             String pjson;
             Player myPlayer = app.getMyPlayer();
             pjson = gson.toJson(myPlayer);
+            Log.e("PJ",pjson);
 
             try {
                 //JSONObject를 만들고 key value 형식으로 값을 저장해준다.
-         //리스트를 json 으로 만들기
-                JSONArray jarray = new JSONArray(pjson);
-                JSONObject jsonObject = jarray.getJSONObject(0);
+                //리스트를 json 으로 만들자
+                JSONObject jsonObject = new JSONObject(pjson);
 
                 HttpURLConnection con = null;
                 BufferedReader reader = null;
@@ -143,9 +143,9 @@ public class UpdateGameThread extends Thread{
 
                 try {
                     Log.e("PLAYER","REQ TO ::"+setURL+myPlayer.getName());
-                    URL url = new URL(setURL+myPlayer.getName());
+                    URL url2 = new URL(setURL+myPlayer.getName());
                     //연결을 함
-                    con = (HttpURLConnection) url.openConnection();
+                    con = (HttpURLConnection) url2.openConnection();
 
                     con.setRequestMethod("POST");//POST방식으로 보냄
                     con.setRequestProperty("Cache-Control", "no-cache");//캐시 설정
