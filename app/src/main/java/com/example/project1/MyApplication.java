@@ -153,7 +153,7 @@ public class MyApplication extends Application {
                     public void onSuccess(Location location) {
                         // Got last known location. In some rare situations this can be null.
                         if (location != null) {
-                            myPlayer.setLocation(location);
+                            myPlayer.setLocation(location.getLatitude(),location.getLongitude());
                         }
                     }
                 });

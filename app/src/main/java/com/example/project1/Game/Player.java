@@ -18,7 +18,7 @@ public class Player {
 
     */
 
-    private Location location;
+    //private Location location;
     private Pair<Double,Double> getPos(){
         return new Pair(this.Latitude,this.Longitude);
     }
@@ -30,13 +30,12 @@ public class Player {
         return number;
     }
 
-    public Location getLocation(){
-        return this.location;
+    public Pair<Double,Double> getLocation(){
+        return new Pair(this.Latitude,this.Longitude);
     }
-    public void setLocation(Location location){
-        this.location = location;
-        this.Latitude = location.getLatitude();
-        this.Longitude = location.getLongitude();
+    public void setLocation(double Latitude,double Longitude){
+        this.Latitude = Latitude;
+        this.Longitude = Longitude;
     }
 
     public void Heal(int amount){
