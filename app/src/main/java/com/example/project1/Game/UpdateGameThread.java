@@ -80,8 +80,7 @@ public class UpdateGameThread extends Thread{
                 //다 가져오면 String 형변환을 수행한다. 이유는 protected String doInBackground(String... urls) 니까
                 // 여기서 Player List String 이 보내질 것이다.
                 String json = buffer.toString();
-                Player[] array = gson.fromJson(json, Player[].class);
-                Log.e("what", String.valueOf(array));//json 에서 얻어가기
+                Player[] array = gson.fromJson(json, Player[].class); //json 에서 얻어가기
                 List<Player> nplayers = new ArrayList<>();
                 if (nplayers == null || array == null) {
                 } else {
