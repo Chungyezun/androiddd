@@ -43,21 +43,20 @@
             android:id="@+id/player"
             android:layout_width="123dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="68dp"
+            android:layout_marginTop="20dp"
             android:text="Player"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/players"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="44dp"
+            android:layout_width="131dp"
+            android:layout_height="271dp"
+            android:layout_marginStart="16dp"
             app:layout_constraintBottom_toTopOf="@+id/game_start"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/player"
-            app:layout_constraintVertical_bias="0.894">
+            app:layout_constraintVertical_bias="0.011">
 
         </androidx.recyclerview.widget.RecyclerView>
 
@@ -73,43 +72,78 @@
             app:layout_constraintTop_toTopOf="@+id/player"
             app:layout_constraintVertical_bias="1.0" />
 
-        <TextView
-            android:id="@+id/playerr"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="200dp"
-            android:layout_marginEnd="72dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/jikup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="54dp"
-            app:layout_constraintEnd_toEndOf="@+id/playerr"
-            app:layout_constraintStart_toStartOf="@+id/playerr"
-            app:layout_constraintTop_toBottomOf="@+id/playerr" />
-
-        <TextView
-            android:id="@+id/nowhp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="92dp"
-            app:layout_constraintBottom_toTopOf="@+id/nowmaxhp"
-            app:layout_constraintEnd_toEndOf="@+id/jikup"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/jikup" />
-
-        <TextView
-            android:id="@+id/nowmaxhp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="80dp"
+            android:layout_margin="40dp"
+            android:elevation="10dp"
+            android:padding="12dp"
             app:layout_constraintBottom_toTopOf="@+id/game_start"
-            app:layout_constraintEnd_toEndOf="@+id/nowhp"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/nowhp" />
+            app:layout_constraintEnd_toEndOf="@+id/unique_pic"
+            app:layout_constraintStart_toStartOf="@+id/unique_pic">
+
+            <TextView
+                android:id="@+id/nowhp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="현재 HP"
+                app:layout_constraintBottom_toBottomOf="@+id/textView6"
+                app:layout_constraintStart_toEndOf="@+id/textView6"
+                app:layout_constraintTop_toTopOf="@+id/textView6" />
+
+            <TextView
+                android:id="@+id/playerr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="플레이어 이름"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/jikup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="직업"
+                app:layout_constraintBottom_toBottomOf="@+id/playerr"
+                app:layout_constraintStart_toEndOf="@+id/playerr"
+                app:layout_constraintTop_toTopOf="@+id/playerr" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="HP:"
+                app:layout_constraintStart_toStartOf="@+id/playerr"
+                app:layout_constraintTop_toBottomOf="@+id/playerr" />
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="/"
+                app:layout_constraintBottom_toBottomOf="@+id/nowhp"
+                app:layout_constraintStart_toEndOf="@+id/nowhp"
+                app:layout_constraintTop_toTopOf="@+id/nowhp" />
+
+            <TextView
+                android:id="@+id/nowmaxhp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="최대 HP"
+                app:layout_constraintBottom_toBottomOf="@+id/nowhp"
+                app:layout_constraintStart_toEndOf="@+id/textView5"
+                app:layout_constraintTop_toTopOf="@+id/nowhp" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ImageView
+            android:id="@+id/unique_pic"
+            android:layout_width="136dp"
+            android:layout_height="147dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
+            app:layout_constraintEnd_toEndOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

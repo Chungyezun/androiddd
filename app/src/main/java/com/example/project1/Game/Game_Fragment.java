@@ -19,6 +19,8 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -52,6 +54,8 @@ public class Game_Fragment extends Fragment {
     private TextView mJikup;
     private TextView mHp;
     private TextView mMaxhp;
+    private SwipeRefreshLayout layout;
+    private ImageView image;
 
     SwipeRefreshLayout swl;
 
@@ -69,7 +73,6 @@ public class Game_Fragment extends Fragment {
         super.onCreate(savedInstanceState);
 
 
-
     }
 
     @Override
@@ -77,6 +80,11 @@ public class Game_Fragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_game, container, false);
+        layout = (SwipeRefreshLayout)view.findViewById(R.id.swiperefreshGL);
+        image = (ImageView)view.findViewById(R.id.unique_pic);
+        layout.setBackgroundResource(R.drawable.gamebackgroud);
+        image.setImageResource(R.drawable.person);
+        layout.bringChildToFront(image);
         mRecyclerView = (RecyclerView)view.findViewById(R.id.players);
         mLayoutManager = new LinearLayoutManager(this.getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -93,7 +101,7 @@ public class Game_Fragment extends Fragment {
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), Tab3Activity.class);
+                Intent intent = new Intent(getContext(), GameActivity.class);
                 startActivity(intent);
             }
         });

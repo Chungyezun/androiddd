@@ -112,8 +112,9 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
         mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         battleRadius = new CircleOptions()
             .center( new LatLng(app.getMyPlayer().getLocation().first,app.getMyPlayer().getLocation().second))
-                .radius(50)
-                .fillColor(Color.parseColor("#880000ff"))
+                .radius(300)
+                .fillColor(Color.parseColor("#4D0000ff"))
+
                 .strokeWidth(0f)
                 .clickable(false);
         myCircle = mGoogleMap.addCircle(battleRadius);
@@ -127,6 +128,7 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
 
         enemies = new ArrayList<>();
         enemyCircle = new ArrayList<>();
+
 
         List<Player> allPlayers = app.getAllPlayers();
         if(allPlayers == null){
@@ -237,8 +239,8 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
             optFirst.title("Current Position");// 제목 미리보기
             optFirst.snippet("Snippet");
             mGoogleMap.addMarker(optFirst).showInfoWindow();
-            t.start();
 
+            t.start();
     }
 
 }
