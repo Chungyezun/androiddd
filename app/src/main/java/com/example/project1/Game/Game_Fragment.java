@@ -28,6 +28,8 @@ import com.example.project1.R;
 import com.example.project1.Tab3Activity;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.example.project1.MyApplication.getAppContext;
@@ -58,13 +60,8 @@ public class Game_Fragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        app.getPosition();
         super.onCreate(savedInstanceState);
-        app = (MyApplication) getAppContext();
-        UpdateGameThread ugthread = new UpdateGameThread(app);
-        ugthread.start();
-        players = app.getAllPlayers();
-        Log.e("Hi", String.valueOf(players));
+
 
 
     }
@@ -106,25 +103,36 @@ public class Game_Fragment extends Fragment {
             @Override
             public void onClick(View v) {
                 player_name = String.valueOf(mEditText.getText());
-                Player newPlayer = new Player(player_name,unique);
-                players.add(newPlayer);
+                Log.e("player",player_name);
+                Player newPlayer = new Player(player_name,unique,100,100);
+
+
+                app = (MyApplication) getAppContext();
+                app.setPlayer(newPlayer);
+                app.getPosition();
+                UpdateGameThread ugthread = new UpdateGameThread(app);
+                ugthread.start();
+
             }
         });
         swl = (SwipeRefreshLayout) view.findViewById(R.id.swiperefreshGL);
         swl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                players = app.getAllPlayers();
-                GameAdapter nAdapter = new GameAdapter(players);
-                mRecyclerView.setAdapter(nAdapter);
-                Log.e("Hi", String.valueOf(players));
+                app = (MyApplication) getAppContext();
+                if(app.getAllPlayers() != null) {
+                    players = app.getAllPlayers();
+                    Collections.sort(players);
+                    GameAdapter nAdapter = new GameAdapter(players);
+                    mRecyclerView.setAdapter(nAdapter);
+                    Log.e("Hi", String.valueOf(players));
+                }
                 new Handler().postDelayed(new Runnable() {
                     @Override
-                    public void run(){
+                    public void run() {
                         swl.setRefreshing(false);
                     }
-                },300);
-
+                }, 300);
             }
         });
         /*

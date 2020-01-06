@@ -26,11 +26,14 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.ViewHolder>{
         public TextView playername;
         public TextView unique;
         public TextView hp;
+        public TextView max_hp;
 
         public ViewHolder(View itemView){ //Constructor for ViewHolder
             super(itemView);
             playername = (TextView) itemView.findViewById(R.id.player_name);
             unique = (TextView) itemView.findViewById(R.id.person_class);
+            max_hp = (TextView) itemView.findViewById(R.id.MAX_HP);
+            hp = (TextView) itemView.findViewById(R.id.hp);
             // 인터페이스랑 대충 연결하기...
 //            itemView.setOnClickListener(new View.OnClickListener(){
 //                @Override
@@ -98,8 +101,10 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.ViewHolder>{
         playername.setText(player.getName());
         TextView unique = viewHolder.unique;
         unique.setText(player.getUnique());
-        Log.e("hell",player.getName());
-        Log.e("hell",player.getUnique());
+        TextView hp = viewHolder.hp;
+        TextView max_hp = viewHolder.max_hp;
+        hp.setText(String.valueOf(player.getHP()));
+        max_hp.setText(String.valueOf(player.getMAXhp()));
 
     }
 
