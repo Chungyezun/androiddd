@@ -43,11 +43,6 @@ public class Game_Fragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
-//        Intent intent = new Intent(getContext(), Tab3Activity.class);
-//        startActivity(intent);
-
     }
 
     @Override
@@ -61,6 +56,13 @@ public class Game_Fragment extends Fragment {
         mAdapter = new GameAdapter(players);
         mRecyclerView.setAdapter(mAdapter);
         mButton = (Button)view.findViewById(R.id.game_start);
+        mButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), Tab3Activity.class);
+                startActivity(intent);
+            }
+        });
         return view;
     }
 

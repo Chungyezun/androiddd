@@ -7,6 +7,16 @@ import android.os.AsyncTask;
 import android.util.Base64;
 import android.util.Log;
 
+import androidx.appcompat.widget.ThemedSpinnerAdapter;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpResponse;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -16,6 +26,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -25,11 +36,22 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
 
 import static com.example.project1.MyApplication.getAppContext;
+import static java.sql.DriverManager.println;
 
 public class IOcustom {
+    String forwardURL = "https://27aa638c.ngrok.io";
     String input_data;
     String write_data;
     Bitmap input_bitmap;
@@ -37,25 +59,139 @@ public class IOcustom {
     public void writeToFile(String data, Context context) {
         // Exception 이 안 뜨면, Contacts.json 에 data string 저장. contexts 는 이 앱으로 준다.
         input_data = data;
-        new JSONTaskWrite().execute("http://cs497madcampproj2yeah.localtunnel.me/post");
+        new JSONTaskWrite().execute(forwardURL+"/post");
     }
 
     public void deleteFile(String data, Context context) {
         // Exception 이 안 뜨면, Contacts.json 에 data string 저장. contexts 는 이 앱으로 준다.
         input_data = data;
-        new JSONTaskWrite().execute("http://cs497madcampproj2yeah.localtunnel.me/editcontacts");
+        new JSONTaskWrite().execute(forwardURL+"/editcontacts");
     }
 
     public void readFromFile(Context context) {
-        new JSONTaskRead().execute("http://cs497madcampproj2yeah.localtunnel.me/contacts");
+        new JSONTaskRead().execute(forwardURL+"/contacts");
     }
 
     public void getImName(Context context) {
-        new JSONgetNames().execute("http://cs497madcampproj2yeah.localtunnel.me/image");
+        new JSONgetNames().execute(forwardURL+"/image");
     }
+
+    public static String get64BaseImage (Bitmap bmp) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] imageBytes = baos.toByteArray();
+        return Base64.encodeToString(imageBytes, Base64.DEFAULT);
+    }
+
+
     public void sendImage(Bitmap data, Context context){
+
+        String filename = UUID.randomUUID().toString() + ".jpg";
+        Log.e("IMGFILENAME",filename);
+        File f = new File(context.getCacheDir(), filename);
+        try{
+            f.createNewFile();
+        }catch(IOException e){
+            Log.e("IMGFILENAME","IOException");
+            return;
+        }
+//Convert bitmap to byte array
+        Bitmap bitmap = data;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 0 /*ignored for PNG*/, bos);
+        byte[] bitmapdata = bos.toByteArray();
+
+//write the bytes in file
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(f);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            fos.write(bitmapdata);
+            fos.flush();
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+
+        Retrofit retrofit = NetworkClient.getRetrofitClient(getAppContext().getApplicationContext());
+        NetworkClient.UploadAPIs uploadAPIs = retrofit.create(NetworkClient.UploadAPIs.class);
+        //Create a file object using file path
+        File file = f;
+        // Create a request body with file and image media type
+        RequestBody fileReqBody = RequestBody.create(MediaType.parse("image/*"), file);
+        // Create MultipartBody.Part using file request-body,file name and part name
+        MultipartBody.Part part = MultipartBody.Part.createFormData("upload", file.getName(), fileReqBody);
+        //Create request body with text description and text media type
+        RequestBody description = RequestBody.create(MediaType.parse("text/plain"), "image-type");
+        //
+        Call call = uploadAPIs.uploadImage(part, description);
+        call.enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, retrofit2.Response response) {
+
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+
+        /////////////////////////////////
+        /*
         input_bitmap = data;
-        new JSONSendImage().execute("http://cs497madcampproj2yeah.localtunnel.me/upload");
+        String url = "http://cs497madcampproj2yeah.localtunnel.me/upload";
+        StringRequest request = new StringRequest(
+                Request.Method.POST,
+                url,
+                new Response.Listener<String>() {  //응답을 문자열로 받아서 여기다 넣어달란말임(응답을 성공적으로 받았을 떄 이메소드가 자동으로 호출됨
+                    @Override
+                    public void onResponse(String response) {
+                        println("응답 => " + response);
+                    }
+                },
+                new Response.ErrorListener(){ //에러발생시 호출될 리스너 객체
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        println("에러 => "+ error.getMessage());
+                    }
+                }
+        ){
+            //만약 POST 방식에서 전달할 요청 파라미터가 있다면 getParams 메소드에서 반환하는 HashMap 객체에 넣어줍니다.
+            //이렇게 만든 요청 객체는 요청 큐에 넣어주는 것만 해주면 됩니다.
+            //POST방식으로 안할거면 없어도 되는거같다.
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+
+                String filename = UUID.randomUUID().toString();
+                String imstring = get64BaseImage(input_bitmap);
+                params.put("image_string", imstring);
+                params.put("filename", filename);
+                return params;
+            }
+        };
+        request.setShouldCache(false);
+        AppHelper.requestQueue.add(request);
+        Log.e("UPLOAD","REQ SENT");
+        */
+        //Volley 는 켜져있다
+
+        //new JSONSendImage().execute("http://cs497madcampproj2yeah.localtunnel.me/upload");
     }
 
 
@@ -451,7 +587,6 @@ public class IOcustom {
 
                     con.setRequestMethod("POST");//POST방식으로 보냄
                     con.setRequestProperty("Cache-Control", "no-cache");//캐시 설정
-                    con.setRequestProperty("Content-Type", "application/json");//application JSON 형식으로 전송
                     con.setRequestProperty("Accept", "application/json");//서버에 response 데이터를 html로 받음
                     con.setDoOutput(true);//Outstream으로 post 데이터를 넘겨주겠다는 의미
                     con.setDoInput(true);//Inputstream으로 서버로부터 응답을 받겠다는 의미
@@ -461,10 +596,8 @@ public class IOcustom {
                     OutputStream outStream = con.getOutputStream();
                     //버퍼를 생성하고 넣음
                     BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outStream));
+                    Log.e("buffer", "sss");
 
-//                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-//                    input_bitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
-//                    byte[] array = bos.toByteArray();
                     writer.write(encodeTobase64(input_bitmap));
                     writer.flush();
                     writer.close();//버퍼를 받아줌
