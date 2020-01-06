@@ -51,6 +51,7 @@ import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -66,6 +67,31 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
 
     private GoogleMap mGoogleMap;
     private MyApplication app;
+    List<CircleOptions>enemies;
+    CircleOptions battleRadius;
+    List<Circle>enemyCircle;
+    List<GoogleMap.OnCircleClickListener> circleClickListeners;
+    Circle myCircle;
+    Thread t = new Thread(){
+        @Override
+        public void run(){
+            while(true){
+                try {
+                    Thread.sleep(1000);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            update();
+                            Log.d("t","tick");
+                        }
+                    });
+                }catch(InterruptedException e){
+                    break;
+                }
+            }
+        }
+
+    };
 
 
 
@@ -84,16 +110,13 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
         mGoogleMap = googleMap;
         //지도타입 - 일반
         mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        CircleOptions battleRadius = new CircleOptions()
+        battleRadius = new CircleOptions()
             .center( new LatLng(app.getMyPlayer().getLocation().first,app.getMyPlayer().getLocation().second))
-                .radius(1000)
+                .radius(50)
                 .fillColor(Color.parseColor("#880000ff"))
                 .strokeWidth(0f)
                 .clickable(false);
-        mGoogleMap.addCircle(battleRadius);
-
-
-
+        myCircle = mGoogleMap.addCircle(battleRadius);
 
         int length;
         if(app.getAllPlayers() == null) {
@@ -102,27 +125,67 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
             length =app.getAllPlayers().size();
         }
 
-        List<CircleOptions>enemies = new ArrayList<>();
+        enemies = new ArrayList<>();
+        enemyCircle = new ArrayList<>();
 
+        List<Player> allPlayers = app.getAllPlayers();
+        if(allPlayers == null){
+
+        }else{
+            for(int i = 0; i < length;i++){
+                if(!app.getAllPlayers().get(i).getName().equals(app.getMyPlayer().getName()) ){
+                    CircleOptions otherCircles = new CircleOptions()
+                            .center( new LatLng(app.getAllPlayers().get(i).getLocation().first,app.getAllPlayers().get(i).getLocation().second))
+                            .radius(5)
+                            .fillColor(Color.parseColor("#8800ff00"))
+                            .clickable(true);
+                    enemies.add(otherCircles);
+                }
+            }
+        }
         for(int i = 0; i < length;i++){
-            CircleOptions otherCircles = new CircleOptions()
-                    .center( new LatLng(app.getAllPlayers().get(i).getLocation().first,app.getAllPlayers().get(i).getLocation().second))
-                    .radius(12)
-                    .fillColor(Color.RED)
-                    .clickable(true);
-            enemies.add(otherCircles);
+            if(!app.getAllPlayers().get(i).getName().equals(app.getMyPlayer().getName()) ){
+                enemyCircle.add(mGoogleMap.addCircle(enemies.get(i)));
+                enemyCircle.get(enemyCircle.size()-1).setTag(app.getAllPlayers().get(i).getName());
+            }else{
+
+                Log.d("me","me");
+            }
         }
 
-        for(int j = 0;j < length;j++){
-            mGoogleMap.addCircle(enemies.get(j));
-        }
         mGoogleMap.setMyLocationEnabled(true);
         mGoogleMap.setOnMyLocationButtonClickListener(null);
         mGoogleMap.setOnMyLocationClickListener(null);
+        mGoogleMap.setOnCircleClickListener(new GoogleMap.OnCircleClickListener() {
+            @Override
+            public void onCircleClick(Circle circle) {
+                String name = (String) circle.getTag();
+                Log.d("SELECT_NAME",name);
 
-
-
+            }
+        });
         init();
+
+
+
+    }
+    public void update(){
+        int length;
+        if(app.getAllPlayers() == null) {
+            length = 0;
+        }else{
+            length =app.getAllPlayers().size()-1;
+        }
+
+        List<Player> allPlayers = app.getAllPlayers();
+        if(allPlayers == null){
+        }else {
+            for (int i = 0; i < length; i++) {
+                enemyCircle.get(i).setCenter(new LatLng(app.getAllPlayers().get(i).getLocation().first, app.getAllPlayers().get(i).getLocation().second));
+            }
+        }
+        myCircle.setCenter(new LatLng(app.getMyPlayer().getLocation().first,app.getMyPlayer().getLocation().second));
+
     }
 
 
@@ -166,7 +229,7 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
             mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 
             // Map 을 zoom 합니다.
-            mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(13));
+            mGoogleMap.animateCamera(CameraUpdateFactory.zoomTo(20));
 
             // 마커 설정.
             MarkerOptions optFirst = new MarkerOptions();
@@ -174,11 +237,8 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
             optFirst.title("Current Position");// 제목 미리보기
             optFirst.snippet("Snippet");
             mGoogleMap.addMarker(optFirst).showInfoWindow();
-            CircleOptions circle1KM = new CircleOptions().center(latLng)
-                    .radius(1000)
-                    .strokeWidth(0f)
-                    .fillColor(Color.parseColor("#880000ff"));
-            mGoogleMap.addCircle(circle1KM);
+            t.start();
+
     }
 
 }
