@@ -136,7 +136,7 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
                 if(!app.getAllPlayers().get(i).getName().equals(app.getMyPlayer().getName()) ){
                     CircleOptions otherCircles = new CircleOptions()
                             .center( new LatLng(app.getAllPlayers().get(i).getLocation().first,app.getAllPlayers().get(i).getLocation().second))
-                            .radius(5)
+                            .radius(12)
                             .fillColor(Color.parseColor("#8800ff00"))
                             .clickable(true);
                     enemies.add(otherCircles);
