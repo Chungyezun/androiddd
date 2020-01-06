@@ -51,7 +51,7 @@ import static com.example.project1.MyApplication.getAppContext;
 import static java.sql.DriverManager.println;
 
 public class IOcustom {
-    String forwardURL = "http://b1b3f083.ngrok.io";
+    String forwardURL = "http://b1b3f083.ngrok.io/";
     String input_data;
     String write_data;
     Bitmap input_bitmap;
@@ -141,6 +141,57 @@ public class IOcustom {
             }
         });
 
+
+
+
+
+
+
+
+
+
+
+        /////////////////////////////////
+        /*
+        input_bitmap = data;
+        String url = "http://cs497madcampproj2yeah.localtunnel.me/upload";
+        StringRequest request = new StringRequest(
+                Request.Method.POST,
+                url,
+                new Response.Listener<String>() {  //응답을 문자열로 받아서 여기다 넣어달란말임(응답을 성공적으로 받았을 떄 이메소드가 자동으로 호출됨
+                    @Override
+                    public void onResponse(String response) {
+                        println("응답 => " + response);
+                    }
+                },
+                new Response.ErrorListener(){ //에러발생시 호출될 리스너 객체
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        println("에러 => "+ error.getMessage());
+                    }
+                }
+        ){
+            //만약 POST 방식에서 전달할 요청 파라미터가 있다면 getParams 메소드에서 반환하는 HashMap 객체에 넣어줍니다.
+            //이렇게 만든 요청 객체는 요청 큐에 넣어주는 것만 해주면 됩니다.
+            //POST방식으로 안할거면 없어도 되는거같다.
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+
+                String filename = UUID.randomUUID().toString();
+                String imstring = get64BaseImage(input_bitmap);
+                params.put("image_string", imstring);
+                params.put("filename", filename);
+                return params;
+            }
+        };
+        request.setShouldCache(false);
+        AppHelper.requestQueue.add(request);
+        Log.e("UPLOAD","REQ SENT");
+        */
+        //Volley 는 켜져있다
+
+        //new JSONSendImage().execute("http://cs497madcampproj2yeah.localtunnel.me/upload");
     }
 
 
