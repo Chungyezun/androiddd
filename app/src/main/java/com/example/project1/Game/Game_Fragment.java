@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.example.project1.Contacts.ContactAdapter;
 import com.example.project1.Gallery.MyAdapter;
@@ -47,6 +48,11 @@ public class Game_Fragment extends Fragment {
     private List<Player> players = new ArrayList<>();
     private String unique;
     private String player_name;
+    private TextView mPlayerr;
+    private TextView mJikup;
+    private TextView mHp;
+    private TextView mMaxhp;
+
     SwipeRefreshLayout swl;
 
     public List<Player> getPlayers(){
@@ -80,7 +86,10 @@ public class Game_Fragment extends Fragment {
         mEditText = (EditText)view.findViewById(R.id.player);
         mButton = (Button)view.findViewById(R.id.game_start);
         login_button = (Button)view.findViewById(R.id.button_player);
-
+        mPlayerr = (TextView)view.findViewById(R.id.playerr);
+        mJikup =(TextView)view.findViewById(R.id.jikup);
+        mHp = (TextView)view.findViewById(R.id.nowhp);
+        mMaxhp = (TextView)view.findViewById(R.id.nowmaxhp);
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,6 +118,10 @@ public class Game_Fragment extends Fragment {
 
                 app = (MyApplication) getAppContext();
                 app.setPlayer(newPlayer);
+                mPlayerr.setText(newPlayer.getName());
+                mJikup.setText(newPlayer.getUnique());
+                mHp.setText(String.valueOf(newPlayer.getHP()));
+                mMaxhp.setText(String.valueOf(newPlayer.getMAXhp()));
                 app.getPosition();
                 UpdateGameThread ugthread = new UpdateGameThread(app);
                 ugthread.start();
