@@ -144,7 +144,9 @@ public class MyApplication extends Application {
         return this.allPlayers;
     }
     public void setAllPlayers(List<Player> allPlayers){
+
         this.allPlayers = allPlayers;
+        Log.d("Alls",getAllPlayers().get(0).getName());
     }
     public Player getMyPlayer(){
         return this.myPlayer;
