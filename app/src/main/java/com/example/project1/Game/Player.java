@@ -1,5 +1,7 @@
 package com.example.project1.Game;
 
+import android.location.Location;
+
 import androidx.core.util.Pair;
 
 public class Player {
@@ -9,7 +11,12 @@ public class Player {
     private int hp;
     private int MAX_HP;
 
-    private Pair<Integer, Integer> Location; // LAT LONG
+    /* 플레이어의 직업을 설정하자!!!
+
+
+    */
+
+    private Location location;
 
 
     public String getName(){
@@ -19,15 +26,26 @@ public class Player {
         return number;
     }
 
-    public Pair<Integer, Integer> getLocation(){
-        return this.Location;
+    public Location getLocation(){
+        return this.location;
+    }
+    public void setLocation(Location location){
+        this.location = location;
     }
 
     public void Heal(int amount){
-        hp = hp + amount;
+        this.hp = this.hp + amount;
+        if(this.hp>MAX_HP){
+            this.hp = MAX_HP;
+        }
     }
-    public void Damage(int amount){
-        hp = hp - amount;
+    public boolean Damage(int amount){
+        this.hp = this.hp - amount;
+        if(this.hp < 0){
+            return false;
+            //내가 플레이어를 죽였으므로, 포인트를 얻는다...!
+        }
+        return true;
     }
 
     public Player(String nName, String nNumber){

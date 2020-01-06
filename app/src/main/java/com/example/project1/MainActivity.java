@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     IOcustom iocustom;
     private static final String TAG = "MainActivity";
     protected MyApplication app;
+    private boolean fromCam;
 
 
     public void buttonDo(int idx){
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         if(idx == 0) {
             Intent intent = new Intent(this, AddContact.class);
             Log.e("TAB_PRESS", "0");
+            fromCam = true;
             startActivity(intent); // intent 를 통해 새 activity 에 접속?
         }else if(idx == 1) {
                 startActivity(camIntent);
@@ -83,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        fromCam = false;
         //Turn on volley!
         if(AppHelper.requestQueue == null){
             AppHelper.requestQueue = Volley.newRequestQueue(getAppContext());
@@ -207,6 +210,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         callbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
+        if(fromCam){
+
+            fromCam = false;
+        }
     }
 
     protected void onResume(){
