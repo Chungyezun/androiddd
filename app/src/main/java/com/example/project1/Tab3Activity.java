@@ -7,6 +7,7 @@ import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.location.Address;
 import android.location.Geocoder;
@@ -27,6 +28,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
 
+import com.example.project1.Game.Player;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -36,16 +38,20 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -71,6 +77,44 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
         mGoogleMap = googleMap;
         //지도타입 - 일반
         mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        CircleOptions battleRadius = new CircleOptions()
+            .center( new LatLng(app.getMyPlayer().getLocation().first,app.getMyPlayer().getLocation().second))
+                .radius(1000)
+                .fillColor(Color.parseColor("#880000ff"))
+                .strokeWidth(0f)
+                .clickable(false);
+        mGoogleMap.addCircle(battleRadius);
+
+
+
+
+        int length;
+        if(app.getAllPlayers() == null) {
+            length = 0;
+        }else{
+            length =app.getAllPlayers().size();
+        }
+
+        List<CircleOptions>enemies = new ArrayList<>();
+
+        for(int i = 0; i < length;i++){
+            CircleOptions otherCircles = new CircleOptions()
+                    .center( new LatLng(app.getAllPlayers().get(i).getLocation().first,app.getAllPlayers().get(i).getLocation().second))
+                    .radius(12)
+                    .fillColor(Color.RED)
+                    .clickable(true);
+            enemies.add(otherCircles);
+        }
+
+        for(int j = 0;j < length;j++){
+            mGoogleMap.addCircle(enemies.get(j));
+        }
+        mGoogleMap.setMyLocationEnabled(true);
+        mGoogleMap.setOnMyLocationButtonClickListener(null);
+        mGoogleMap.setOnMyLocationClickListener(null);
+
+
+
         init();
     }
 
