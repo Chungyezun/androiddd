@@ -61,9 +61,6 @@ public class AddContact extends AppCompatActivity {
 
     public void press_save(View view){
 
-        Contact tmpcontact = new Contact("Jay Lee","01054375220");
-
-        IOcustom iocustom = new IOcustom();
         Intent intent = new Intent(this, MainActivity.class);
 
         EditText name = (EditText) findViewById(R.id.typename);

@@ -5,10 +5,14 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.GridView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +36,7 @@ public class Contact_Fragment extends Fragment {
     public List<Contact> getContacts(){
         return contacts;
     }
-
+    SwipeRefreshLayout swl;
     public Contact_Fragment() {
         // Required empty public constructor
     }
@@ -61,6 +65,26 @@ public class Contact_Fragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new ContactAdapter(contacts);
         mRecyclerView.setAdapter(mAdapter);
+
+
+        swl = (SwipeRefreshLayout) view.findViewById(R.id.swiperefreshCNT);
+        swl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if(mRecyclerView.computeVerticalScrollExtent() == 0){
+                    app.getContacts();
+                    //MyAdapter nAdapter = new MyAdapter(R.layout.row,app);
+                    mAdapter.notifyDataSetChanged();
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run(){
+                            swl.setRefreshing(false);
+                        }
+                    },300);
+                }
+            }
+        });
 
         return view;
     }

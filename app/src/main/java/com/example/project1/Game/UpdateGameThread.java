@@ -202,11 +202,12 @@ public class UpdateGameThread extends Thread{
 
         while (true) { // 1초마다 여기서 Connection을 유지해보자..////////////////////////////////////////////////
             //1. My Location Update
-            app.getCurrentActivity().runOnUiThread(new Runnable() {
-                public void run() {
-                    app.getPosition();
-                }
-            });
+            //app.getCurrentActivity().runOnUiThread(new Runnable() {
+             //   public void run() {
+             //       app.getPosition();
+              //  }
+            //});
+            app.getPosition();
             updateMe();
             try{
                 Thread.sleep(500);
