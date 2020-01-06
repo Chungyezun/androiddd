@@ -12,6 +12,9 @@ import androidx.annotation.NonNull;
 import com.example.project1.Contacts.Contact;
 import com.example.project1.Game.Player;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -24,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.Executor;
 
@@ -40,6 +44,9 @@ public class MyApplication extends Application {
     private List<String> imgNames;
     private static Player myPlayer;
     private static List<Player> allPlayers;
+    private static LocationRequest locationRequest;
+    private static LocationCallback locationCallback;
+    private static FusedLocationProviderClient mFusedLocationClient;
 
     Gson gson;
     IOcustom iocustom;
@@ -53,6 +60,8 @@ public class MyApplication extends Application {
     }
 
     public void onCreate(){
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
         myPlayer = new Player("Chulsoo","01023451234");
         super.onCreate();
         iocustom = new IOcustom();
@@ -135,7 +144,9 @@ public class MyApplication extends Application {
         return this.allPlayers;
     }
     public void setAllPlayers(List<Player> allPlayers){
+
         this.allPlayers = allPlayers;
+        Log.d("Alls",getAllPlayers().get(0).getName());
     }
     public Player getMyPlayer(){
         return this.myPlayer;
@@ -145,17 +156,28 @@ public class MyApplication extends Application {
         return MyApplication.context;
     }
     public static void getPosition(){
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getAppContext());
 
-        fusedLocationClient.getLastLocation()
-                .addOnSuccessListener( new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        // Got last known location. In some rare situations this can be null.
-                        if (location != null) {
-                            myPlayer.setLocation(location.getLatitude(),location.getLongitude());
-                        }
+        locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(10 * 1000); // 10 seconds
+        locationRequest.setFastestInterval(5 * 1000); // 5 seconds
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                if (locationResult == null) {
+                    return;
+                }
+                for (Location location : locationResult.getLocations()) {
+                    if (location != null) {
+                        myPlayer.setLocation(location.getLatitude(),location.getLongitude());
+
                     }
-                });
+                }
+                if (mFusedLocationClient != null) {
+                    mFusedLocationClient.removeLocationUpdates(locationCallback);
+                }
+            }
+        };
+        mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
     }
 }
