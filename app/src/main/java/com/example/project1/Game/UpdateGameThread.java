@@ -1,6 +1,9 @@
 package com.example.project1.Game;
 
+import android.app.Activity;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import com.example.project1.Contacts.Contact;
@@ -41,7 +44,7 @@ public class UpdateGameThread extends Thread{
     public void updateUS(){
         Gson gson = new Gson();
 
-        app.getPosition();
+        //app.getPosition();
 
         //2. Get List of All Players
         try {
@@ -124,29 +127,23 @@ public class UpdateGameThread extends Thread{
         Log.e("PJ",pjson);
         try {
             //JSONObject를 만들고 key value 형식으로 값을 저장해준다.
-            //리스트를 json 으로 만들자
             JSONObject jsonObject = new JSONObject(pjson);
 
             HttpURLConnection con = null;
             BufferedReader reader = null;
 
-            Log.e("FIN","Setup Output File");
-
             try {
-                Log.e("PLAYER","REQ TO ::"+setURL+myPlayer.getName());
-                url2 = new URL(setURL+myPlayer.getName());
+                URL url = new URL(setURL+myPlayer.getName());
                 //연결을 함
-                con = (HttpURLConnection) url2.openConnection();
+                con = (HttpURLConnection) url.openConnection();
 
                 con.setRequestMethod("POST");//POST방식으로 보냄
                 con.setRequestProperty("Cache-Control", "no-cache");//캐시 설정
                 con.setRequestProperty("Content-Type", "application/json");//application JSON 형식으로 전송
-                //con.setRequestProperty("Accept", "application/json");//서버에 response 데이터를 html로 받음
+                con.setRequestProperty("Accept", "application/json");//서버에 response 데이터를 html로 받음
                 con.setDoOutput(true);//Outstream으로 post 데이터를 넘겨주겠다는 의미
-                //con.setDoInput(true);//Inputstream으로 서버로부터 응답을 받겠다는 의미
+                con.setDoInput(true);//Inputstream으로 서버로부터 응답을 받겠다는 의미
                 con.connect();
-
-                Log.e("C","Connection Made");
 
                 //서버로 보내기위해서 스트림 만듬
                 OutputStream outStream = con.getOutputStream();
@@ -157,6 +154,18 @@ public class UpdateGameThread extends Thread{
                 writer.close();//버퍼를 받아줌
 
                 //서버로 부터 데이터를 받음
+                InputStream stream = con.getInputStream();
+
+                reader = new BufferedReader(new InputStreamReader(stream));
+
+                StringBuffer buffer = new StringBuffer();
+
+                String line = "";
+                while ((line = reader.readLine()) != null) {
+                    buffer.append(line);
+                }
+
+                Log.d("SEND",buffer.toString());//서버로 부터 받은 값을 리턴해줌 아마 OK!!가 들어올것임
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -177,24 +186,36 @@ public class UpdateGameThread extends Thread{
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        return;
     }
     public void run() {
-        Log.e("THREAD","Game Thread Started");
-        try{
-            Thread.sleep(1000);
-        }catch(InterruptedException e){
+        Log.e("THREAD", "Game Thread Started");
 
-        }
         //1. Get GPS Data and form Player Information Chart.
         // Location Update 명령
 
+
         while (true) { // 1초마다 여기서 Connection을 유지해보자..////////////////////////////////////////////////
             //1. My Location Update
-            updateUS();
+            app.getCurrentActivity().runOnUiThread(new Runnable() {
+                public void run() {
+                    app.getPosition();
+                }
+            });
+            updateMe();
+            try{
+                Thread.sleep(500);
+            }catch(InterruptedException e){
+
+            }
             Log.e("FIN","finished Get Request");
             //3. Update My Player Information
-            updateMe();
+            updateUS();
+            try{
+                Thread.sleep(500);
+            }catch(InterruptedException e){
+
+            }
         }
     }
 }

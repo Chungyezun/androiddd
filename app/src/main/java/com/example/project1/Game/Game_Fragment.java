@@ -43,6 +43,7 @@ public class Game_Fragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        app.getPosition();
         super.onCreate(savedInstanceState);
         app = (MyApplication) getAppContext();
         UpdateGameThread ugthread = new UpdateGameThread(app);
