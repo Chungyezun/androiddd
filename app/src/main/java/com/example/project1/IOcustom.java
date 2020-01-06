@@ -51,7 +51,7 @@ import static com.example.project1.MyApplication.getAppContext;
 import static java.sql.DriverManager.println;
 
 public class IOcustom {
-    String forwardURL = "https://27aa638c.ngrok.io";
+    String forwardURL = "http://b5adc0ac.ngrok.io";
     String input_data;
     String write_data;
     Bitmap input_bitmap;

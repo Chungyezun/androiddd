@@ -28,7 +28,7 @@ public class MyAdapter extends BaseAdapter
     private MyApplication app;
     private int layout;
     LayoutInflater inf;
-    String url = "http://cs497madcampproj2yeah.localtunnel.me/image";
+    String url = "http://b5adc0ac.ngrok.io/image";
 
 
     public MyAdapter(int layout, Context mContext)
