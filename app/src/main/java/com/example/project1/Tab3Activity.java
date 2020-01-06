@@ -25,6 +25,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.util.Pair;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -52,10 +53,12 @@ import java.util.Locale;
 public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapClickListener, OnMapReadyCallback {
 
     private GoogleMap mGoogleMap;
+    private MyApplication app;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        app = (MyApplication) getApplicationContext();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tab3);
         MapsInitializer.initialize(getApplicationContext());
@@ -96,16 +99,13 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
      */
     private void init() {
 
-
+        Pair<Double, Double> pos = app.getMyPlayer().getLocation();
         // 맵의 이동
         //mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 15));
 
-        GpsInfo gps = new GpsInfo(Tab3Activity.this);
         // GPS 사용유무 가져오기
-
-        if (gps.isGetLocation()) {
-            double latitude = gps.getLatitude();
-            double longitude = gps.getLongitude();
+            double latitude = pos.first;
+            double longitude = pos.second;
 
             // Creating a LatLng object for the current location
             LatLng latLng = new LatLng(latitude,longitude);
@@ -122,6 +122,5 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
             optFirst.title("Current Position");// 제목 미리보기
             optFirst.snippet("Snippet");
             mGoogleMap.addMarker(optFirst).showInfoWindow();
-        }
     }
 }
