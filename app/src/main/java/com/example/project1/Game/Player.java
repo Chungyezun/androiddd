@@ -10,6 +10,8 @@ public class Player {
 
     private int hp;
     private int MAX_HP;
+    private double Latitude;
+    private double Longitude;
 
     /* 플레이어의 직업을 설정하자!!!
 
@@ -17,7 +19,9 @@ public class Player {
     */
 
     private Location location;
-
+    private Pair<Double,Double> getPos(){
+        return new Pair(this.Latitude,this.Longitude);
+    }
 
     public String getName(){
         return name;
@@ -31,6 +35,8 @@ public class Player {
     }
     public void setLocation(Location location){
         this.location = location;
+        this.Latitude = location.getLatitude();
+        this.Longitude = location.getLongitude();
     }
 
     public void Heal(int amount){
