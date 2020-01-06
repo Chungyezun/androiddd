@@ -6,7 +6,7 @@ import androidx.core.util.Pair;
 
 public class Player {
     private String name;
-    private String number;
+    private String unique;
 
     private int hp;
     private int MAX_HP;
@@ -26,8 +26,8 @@ public class Player {
     public String getName(){
         return name;
     }
-    public String getNumber(){
-        return number;
+    public String getUnique(){
+        return unique;
     }
 
     public Pair<Double,Double> getLocation(){
@@ -53,8 +53,8 @@ public class Player {
         return true;
     }
 
-    public Player(String nName, String nNumber){
+    public Player(String nName, String nUnique){
         name = nName;
-        number = nNumber;
+        unique = nUnique;
     }
 }

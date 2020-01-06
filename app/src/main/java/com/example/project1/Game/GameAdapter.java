@@ -1,14 +1,15 @@
 package com.example.project1.Game;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.project1.Contacts.ContactAdapter;
 import com.example.project1.R;
 
 import java.util.List;
@@ -18,16 +19,18 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.ViewHolder>{
     public List<Player> getPlayerList(){
         return mPlayers;
     }
+    private String unique1;
 
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        public TextView personName;
-        public TextView Number;
+        public TextView playername;
+        public TextView unique;
+        public TextView hp;
 
         public ViewHolder(View itemView){ //Constructor for ViewHolder
             super(itemView);
-            personName = (TextView) itemView.findViewById(R.id.person_name);
-            Number = (TextView) itemView.findViewById(R.id.person_number);
+            playername = (TextView) itemView.findViewById(R.id.player_name);
+            unique = (TextView) itemView.findViewById(R.id.person_class);
             // 인터페이스랑 대충 연결하기...
 //            itemView.setOnClickListener(new View.OnClickListener(){
 //                @Override
@@ -66,6 +69,7 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.ViewHolder>{
 
     }
     public GameAdapter(List<Player> players) {
+
         mPlayers = players;
     }
 
@@ -90,16 +94,22 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.ViewHolder>{
     @Override
     public void onBindViewHolder(GameAdapter.ViewHolder viewHolder, int position){
         Player player = mPlayers.get(position); // List 에서 가져오기
-        TextView personName = viewHolder.personName;
-        personName.setText(player.getName());
-        TextView personNumber = viewHolder.Number;
-        personNumber.setText(player.getNumber());
+        TextView playername = viewHolder.playername;
+        playername.setText(player.getName());
+        TextView unique = viewHolder.unique;
+        unique.setText(player.getUnique());
+        Log.e("hell",player.getName());
+        Log.e("hell",player.getUnique());
 
     }
 
     @Override
     public int getItemCount(){
-        return mPlayers.size();
+        if(mPlayers == null){
+            return 0;
+        }else {
+            return mPlayers.size();
+        }
     }
 
 }
