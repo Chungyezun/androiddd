@@ -6,23 +6,24 @@
     tools:context=".">
 
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/playerRV"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-
-        <Button
-            android:id="@+id/game_start"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="게임 시작"
-            android:textSize="30dp" />
-    </androidx.recyclerview.widget.RecyclerView>
+    <Button
+        android:id="@+id/game_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="게임 시작"
+        android:textSize="30dp" />
 
     <TextView
         android:id="@+id/player"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/playerRV"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+    </androidx.recyclerview.widget.RecyclerView>
 
 </FrameLayout>
