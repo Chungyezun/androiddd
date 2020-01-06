@@ -86,8 +86,8 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
         mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         CircleOptions battleRadius = new CircleOptions()
             .center( new LatLng(app.getMyPlayer().getLocation().first,app.getMyPlayer().getLocation().second))
-                .radius(1000)
-                .fillColor(Color.parseColor("#880000ff"))
+                .radius(300)
+                .fillColor(Color.parseColor("#4D0000ff"))
                 .strokeWidth(0f)
                 .clickable(false);
         mGoogleMap.addCircle(battleRadius);
@@ -107,8 +107,9 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
         for(int i = 0; i < length;i++){
             CircleOptions otherCircles = new CircleOptions()
                     .center( new LatLng(app.getAllPlayers().get(i).getLocation().first,app.getAllPlayers().get(i).getLocation().second))
-                    .radius(12)
-                    .fillColor(Color.RED)
+                    .radius(300)
+                    .fillColor(Color.parseColor("#4D0000ff"))
+                    .strokeWidth(0f)
                     .clickable(true);
             enemies.add(otherCircles);
         }
@@ -174,11 +175,11 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
             optFirst.title("Current Position");// 제목 미리보기
             optFirst.snippet("Snippet");
             mGoogleMap.addMarker(optFirst).showInfoWindow();
-            CircleOptions circle1KM = new CircleOptions().center(latLng)
-                    .radius(1000)
-                    .strokeWidth(0f)
-                    .fillColor(Color.parseColor("#880000ff"));
-            mGoogleMap.addCircle(circle1KM);
+//            CircleOptions circle1KM = new CircleOptions().center(latLng)
+//                    .radius(1000)
+//                    .strokeWidth(0f)
+//                    .fillColor(Color.parseColor("#880000ff"));
+//            mGoogleMap.addCircle(circle1KM);
     }
 
 }

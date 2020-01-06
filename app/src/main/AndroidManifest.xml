@@ -10,18 +10,20 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <application
         android:name=".MyApplication"
-        android:hardwareAccelerated="false"
         android:allowBackup="true"
+        android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher_new"
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_new_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Tab3Activity"></activity>
+        <activity android:name=".Game.GameActivity"></activity>
+        <activity android:name=".Tab3Activity" />
         <activity
             android:name=".Contacts.Contact_Details"
             android:label="@string/title_activity_contact__details"
@@ -46,9 +48,10 @@
             android:name=".Gallery.FullView"
             android:parentActivityName=".MainActivity"
             android:theme="@style/fullViewTheme" />
+
         <meta-data
-            android:name = "com.google.android.geo.API_KEY"
-            android:value ="AIzaSyCc5203setur31fv6JMxUQZ14VXtikVMc0" />
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCc5203setur31fv6JMxUQZ14VXtikVMc0" />
         <meta-data
             android:name="com.google.firebase.ml.vision.DEPENDENCIES"
             android:value="label" /> <!-- To use multiple models: android:value="label,model2,model3" -->
@@ -57,7 +60,7 @@
             android:value="@string/facebook_app_id" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCc5203setur31fv6JMxUQZ14VXtikVMc0"/>
+            android:value="AIzaSyCc5203setur31fv6JMxUQZ14VXtikVMc0" />
 
         <activity
             android:name="com.facebook.FacebookActivity"
