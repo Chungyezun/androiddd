@@ -9,24 +9,25 @@
     android:orientation="horizontal">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="73dp"
+        android:layout_width="233dp"
+        android:layout_height="62dp"
         android:layout_weight="1"
         android:background="#CFE2DE">
 
 
         <TextView
             android:id="@+id/player_name"
-            android:layout_width="214dp"
-            android:layout_height="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|center_vertical"
             android:layout_marginStart="16dp"
             android:layout_weight="1"
-            android:text="Name of Person"
+            android:text="player_name"
+            android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/person_number"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.197" />
+            app:layout_constraintVertical_bias="0.348" />
 
         <TextView
             android:id="@+id/person_class"
@@ -34,12 +35,35 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:layout_weight="1"
-            android:text="number"
+            android:text="person_class"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/person_name"
-            app:layout_constraintTop_toBottomOf="@+id/person_name" />
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/player_name"
+            app:layout_constraintTop_toBottomOf="@+id/player_name"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/hp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:text="HP"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@+id/player_name"
+            app:layout_constraintTop_toTopOf="@+id/player_name" />
+
+        <TextView
+            android:id="@+id/MAX_HP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="MAX_HP"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/hp"
+            app:layout_constraintStart_toEndOf="@+id/hp"
+            app:layout_constraintTop_toTopOf="@+id/hp"
+            app:layout_constraintVertical_bias="0.0" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
