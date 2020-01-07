@@ -348,6 +348,12 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
 
 
                 Log.d("SELECT_NAME",name);
+                for(Player p:app.getAllPlayers()){
+                    if(p.getName().equals(name)){
+                        enemy = p;
+                    }
+                }
+
                 MyActivity request = new MyActivity();
                 request.startEvent();
                 wd = new WaitingDialog();
@@ -364,7 +370,7 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
                         enemyLocation.setLongitude(enemy.getLocation().second);
                         double distance = myLocation.distanceTo(enemyLocation);
                         if(distance <= 200) {
-                            sendBattleRequest(enemy.getName());
+                            sendBattleRequest(name);
                         }
                         break;
                     }
@@ -408,8 +414,8 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
         if(allPlayers == null){
         }else {
             for (int i = 0; i < length; i++) {
-                if(enemyCircle.get(i) != null){
-                    enemyCircle.get(i).setCenter(new LatLng(app.getAllPlayers().get(i).getLocation().first, app.getAllPlayers().get(i).getLocation().second));
+                if(enemyMarker.get(i) != null){
+                    enemyMarker.get(i).setPosition(new LatLng(app.getAllPlayers().get(i).getLocation().first, app.getAllPlayers().get(i).getLocation().second));
                 }
             }
         }
