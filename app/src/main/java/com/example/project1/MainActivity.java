@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
     IOcustom iocustom;
     private static final String TAG = "MainActivity";
     protected MyApplication app;
-    private boolean fromCam;
 
 
     public void buttonDo(int idx){
@@ -63,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         if(idx == 0) {
             Intent intent = new Intent(this, AddContact.class);
             Log.e("TAB_PRESS", "0");
-            fromCam = true;
+            //fromCam = true;
             startActivity(intent); // intent 를 통해 새 activity 에 접속?
         }else if(idx == 1) {
                 startActivity(camIntent);
@@ -87,8 +86,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Logged_in = false;
-        fromCam = false;
+        app = (MyApplication) getApplicationContext();
+        Logged_in = app.loginStatus;
+        ;
+        //fromCam = false;
         //Turn on volley!
         if (AppHelper.requestQueue == null) {
             AppHelper.requestQueue = Volley.newRequestQueue(getAppContext());
@@ -131,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
                         public void onSuccess(LoginResult loginResult) {
 
                             Logged_in = true;
+                            app.loginStatus = true;
                             Log.e("Error", String.valueOf(Logged_in));
                             if (Logged_in) {
                                 setContentView(R.layout.activity_main);
@@ -226,6 +228,85 @@ public class MainActivity extends AppCompatActivity {
                     });
                 }
             });
+        }else{
+            if (Logged_in) {
+                setContentView(R.layout.activity_main);
+                SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getAppContext(), getSupportFragmentManager());
+                ViewPager viewPager = findViewById(R.id.view_pager);
+                viewPager.setAdapter(sectionsPagerAdapter);
+
+                //TabLayout object (UI에 있는 것) 에 적용시키자
+                final TabLayout tabs = findViewById(R.id.tabs);
+                tabs.setupWithViewPager(viewPager);
+
+                //FAB
+                final FloatingActionButton fab = findViewById(R.id.fab);
+
+                final Button btn_custom_logout = (Button) findViewById(R.id.logout_button);
+
+                fab.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        buttonDo(tabPosition);
+                    }
+                });
+
+                tabs.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager) {
+                    @SuppressLint("RestrictedApi")
+                    @Override
+                    public void onTabSelected(TabLayout.Tab tab) {
+                        tabPosition = tabs.getSelectedTabPosition();
+                        if (tabPosition == 0) {
+                            fab.setImageResource(R.drawable.ic_action_add);
+                            fab.setVisibility(View.VISIBLE);
+                            btn_custom_logout.setVisibility(View.VISIBLE);
+                        } else if (tabPosition == 1) {
+                            fab.setImageResource(R.drawable.ic_action_name);
+                            fab.setVisibility(View.VISIBLE);
+                            btn_custom_logout.setVisibility(View.VISIBLE);
+                        } else {
+                            fab.setVisibility(View.INVISIBLE);
+                            btn_custom_logout.setVisibility(View.INVISIBLE);
+
+                        }
+                    }
+
+                    @Override
+                    public void onTabUnselected(TabLayout.Tab tab) {
+
+                    }
+
+                    @Override
+                    public void onTabReselected(TabLayout.Tab tab) {
+
+                    }
+                });
+
+                app.getNames();         //이미지 데이터베이스 업데이트
+
+                gson = new Gson();      //
+
+                //CONTACTS 불러오기!!!
+                iocustom.readFromFile(getAppContext()); //전화번호부 업데이트
+
+                //로딩 완료가 되었으니, 이 값들을 sharedPreference 로 넘기자...
+
+
+                btn_custom_logout.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+
+                    public void onClick(View view) {
+                        loginManager.logOut();
+                        Logged_in = false;
+                        setContentView(R.layout.login);
+                    }
+
+                });
+
+                ///////////////////////////////////////////////////////////////////
+
+            }
         }
     }
 
@@ -237,6 +318,7 @@ public class MainActivity extends AppCompatActivity {
                 callbackManager.onActivityResult(requestCode, resultCode, data);
 
             }else{
+                Log.e("TAB","Camera return");
                 if (resultCode == RESULT_OK) {
                     Bundle extras = data.getExtras();
                     Bitmap imageBitmap = (Bitmap) extras.get("data");

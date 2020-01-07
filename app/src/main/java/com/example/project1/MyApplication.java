@@ -65,11 +65,13 @@ public class MyApplication extends Application {
     public void setCurrentActivity(Activity mCurrentActivity){
         this.mCurrentActivity = mCurrentActivity;
     }
+    public static boolean loginStatus;
 
     public void onCreate(){
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         super.onCreate();
+        loginStatus = false;
         iocustom = new IOcustom();
          imgNames = new ArrayList<>();
 

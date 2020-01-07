@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,6 +73,7 @@ public class Contact_Fragment extends Fragment {
             @Override
             public void onRefresh() {
                 if(mRecyclerView.computeVerticalScrollExtent() == 0){
+                    Log.d("CONTACTS","CONTACT HAS BEEN REFRESHED");
                     app.getContacts();
                     //MyAdapter nAdapter = new MyAdapter(R.layout.row,app);
                     mAdapter.notifyDataSetChanged();
