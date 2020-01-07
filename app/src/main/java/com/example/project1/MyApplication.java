@@ -69,7 +69,6 @@ public class MyApplication extends Application {
     public void onCreate(){
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        myPlayer = new Player("Chulsoo","01023451234");
         super.onCreate();
         iocustom = new IOcustom();
          imgNames = new ArrayList<>();
@@ -140,6 +139,9 @@ public class MyApplication extends Application {
     }
     public List<Player> getAllPlayers(){
         return this.allPlayers;
+    }
+    public void setPlayer(Player player){
+        this.myPlayer = player;
     }
     public void setAllPlayers(List<Player> allPlayers){
 

@@ -14,20 +14,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
-import com.example.project1.Contacts.ContactAdapter;
-import com.example.project1.Gallery.MyAdapter;
 import com.example.project1.MyApplication;
 import com.example.project1.R;
-import com.example.project1.Tab3Activity;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static com.example.project1.MyApplication.getAppContext;
@@ -45,6 +43,13 @@ public class Game_Fragment extends Fragment {
     private List<Player> players = new ArrayList<>();
     private String unique;
     private String player_name;
+    private TextView mPlayerr;
+    private TextView mJikup;
+    private TextView mHp;
+    private TextView mMaxhp;
+    private SwipeRefreshLayout layout;
+    private ImageView image;
+
     SwipeRefreshLayout swl;
 
     public List<Player> getPlayers(){
@@ -58,13 +63,7 @@ public class Game_Fragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        app.getPosition();
         super.onCreate(savedInstanceState);
-        app = (MyApplication) getAppContext();
-        UpdateGameThread ugthread = new UpdateGameThread(app);
-        ugthread.start();
-        players = app.getAllPlayers();
-        Log.e("Hi", String.valueOf(players));
 
 
     }
@@ -74,6 +73,11 @@ public class Game_Fragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_game, container, false);
+        layout = (SwipeRefreshLayout)view.findViewById(R.id.swiperefreshGL);
+        image = (ImageView)view.findViewById(R.id.unique_pic);
+        layout.setBackgroundResource(R.drawable.gamebackgroud);
+        image.setImageResource(R.drawable.person);
+        layout.bringChildToFront(image);
         mRecyclerView = (RecyclerView)view.findViewById(R.id.players);
         mLayoutManager = new LinearLayoutManager(this.getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -83,7 +87,10 @@ public class Game_Fragment extends Fragment {
         mEditText = (EditText)view.findViewById(R.id.player);
         mButton = (Button)view.findViewById(R.id.game_start);
         login_button = (Button)view.findViewById(R.id.button_player);
-
+        mPlayerr = (TextView)view.findViewById(R.id.playerr);
+        mJikup =(TextView)view.findViewById(R.id.jikup);
+        mHp = (TextView)view.findViewById(R.id.nowhp);
+        mMaxhp = (TextView)view.findViewById(R.id.nowmaxhp);
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,25 +113,40 @@ public class Game_Fragment extends Fragment {
             @Override
             public void onClick(View v) {
                 player_name = String.valueOf(mEditText.getText());
-                Player newPlayer = new Player(player_name,unique);
-                players.add(newPlayer);
+                Log.e("player",player_name);
+                Player newPlayer = new Player(player_name,unique,100,100);
+
+
+                app = (MyApplication) getAppContext();
+                app.setPlayer(newPlayer);
+                mPlayerr.setText(newPlayer.getName());
+                mJikup.setText(newPlayer.getUnique());
+                mHp.setText(String.valueOf(newPlayer.getHP()));
+                mMaxhp.setText(String.valueOf(newPlayer.getMAXhp()));
+                app.getPosition();
+                UpdateGameThread ugthread = new UpdateGameThread(app);
+                ugthread.start();
+
             }
         });
         swl = (SwipeRefreshLayout) view.findViewById(R.id.swiperefreshGL);
         swl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                players = app.getAllPlayers();
-                GameAdapter nAdapter = new GameAdapter(players);
-                mRecyclerView.setAdapter(nAdapter);
-                Log.e("Hi", String.valueOf(players));
+                app = (MyApplication) getAppContext();
+                if(app.getAllPlayers() != null) {
+                    players = app.getAllPlayers();
+                    Collections.sort(players);
+                    GameAdapter nAdapter = new GameAdapter(players);
+                    mRecyclerView.setAdapter(nAdapter);
+                    Log.e("Hi", String.valueOf(players));
+                }
                 new Handler().postDelayed(new Runnable() {
                     @Override
-                    public void run(){
+                    public void run() {
                         swl.setRefreshing(false);
                     }
-                },300);
-
+                }, 300);
             }
         });
         /*

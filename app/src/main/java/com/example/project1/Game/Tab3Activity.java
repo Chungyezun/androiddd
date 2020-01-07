@@ -1,4 +1,4 @@
-package com.example.project1;
+package com.example.project1.Game;
 
 
 import android.Manifest;
@@ -46,6 +46,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.project1.Game.GameActivity;
 import com.example.project1.Game.Player;
+import com.example.project1.MyApplication;
+import com.example.project1.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -89,10 +91,11 @@ import static com.example.project1.Game.GameActivity.cnt;
 
 
 public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapClickListener, OnMapReadyCallback {
-
+    public static WaitingDialog wd;
     String setURL = "http://22f3e836.ngrok.io";
     // SOCKET FUNCTIONS HERE!
     boolean response;
+    MyActivity request;
 
     private GoogleMap mGoogleMap;
     private MyApplication app;
@@ -111,7 +114,8 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
         try {
             data.put("from", app.getMyPlayer().getName());
             data.put("to", name);
-            mSocket.emit("BattleRequest", name);
+            mSocket.emit("BattleRequest", data);
+            Log.d("Enemy","Sent Battle Req");
         }catch( JSONException e){
             e.printStackTrace();
         }
@@ -230,7 +234,7 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
                 enemyCircle.add(mGoogleMap.addCircle(enemies.get(i)));
                 enemyCircle.get(enemyCircle.size()-1).setTag(app.getAllPlayers().get(i).getName());
             }else{
-
+                enemyCircle.add(null);
                 Log.d("me","me");
             }
         }
@@ -243,21 +247,20 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
             public void onCircleClick(Circle circle) {
                 String name = (String) circle.getTag();
                 Log.d("SELECT_NAME",name);
-
-                WaitingDialog wd = new WaitingDialog();
+                MyActivity request = new MyActivity();
+                request.startEvent();
+                wd = new WaitingDialog();
 
                 for(Player player : app.getAllPlayers()){
-                    if(player.getName() == name){
+                    if(player.getName().equals(name)){
                         enemy = player;
+                        sendBattleRequest(enemy.getName());
                         break;
                     }
                 }
                 wd.show(getSupportFragmentManager(),name);
 
                 //Waiting For.. 창
-
-
-
             }
         });
         init();
@@ -277,7 +280,9 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
         if(allPlayers == null){
         }else {
             for (int i = 0; i < length; i++) {
-                enemyCircle.get(i).setCenter(new LatLng(app.getAllPlayers().get(i).getLocation().first, app.getAllPlayers().get(i).getLocation().second));
+                if(enemyCircle.get(i) != null){
+                    enemyCircle.get(i).setCenter(new LatLng(app.getAllPlayers().get(i).getLocation().first, app.getAllPlayers().get(i).getLocation().second));
+                }
             }
         }
         myCircle.setCenter(new LatLng(app.getMyPlayer().getLocation().first,app.getMyPlayer().getLocation().second));
@@ -333,10 +338,9 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
             optFirst.title("Current Position");// 제목 미리보기
             optFirst.snippet("Snippet");
             mGoogleMap.addMarker(optFirst).showInfoWindow();
-
             t.start();
     }
-        private class WaitingDialog extends DialogFragment
+        public static class WaitingDialog extends DialogFragment
         {
             @Override
             public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -344,18 +348,14 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
             MyEventListener ml;
-            MyActivity request = new MyActivity();
-            request.startEvent();
             // 10초간의 서버 통신 시작!
-
-
             builder.setMessage("답장 기다리는 중...")
                     .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             /*
                             * 1. Send "cancelBattle/enemyname" request!
                             */
-                            app.getMyPlayer().setGetBattleRequest(-1); //내가 취소할 때...
+                            //app.getMyPlayer().setGetBattleRequest(-1); //내가 취소할 때...
                             dialog.dismiss(); // Cancel 누르면 그냥 초기화
                         }
                     });
@@ -411,20 +411,36 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
         @Override
         protected Void doInBackground(Void... voids) {
             //Request 받기!
+            try {
             response = false;
             battleListener = new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
+                    Log.d("Enemy","Got Response from " + enemy.getName());
                     JSONObject obj = (JSONObject)args[0];
                     try{
                         response = obj.getBoolean("Response");
-                    }catch (JSONException e){}
+                        if(response){
+                            Log.d("Enemy","ACCEPT BATTLE");
+                            throw new InterruptedException();
+                        }else{
+                            Log.d("Enemy","Ran Away...");
+                        }
+                    }catch (JSONException e){
+
+                    }catch( InterruptedException e){
+                        //throw new InterruptedException();
+                    }
                 }
             };
             mSocket.on("requestAnswer",battleListener);
-            try {
-                Thread.sleep(10000);
-            }catch(InterruptedException e){}
+            Log.d("Enemy","WAIT RESPONSE FOR REQUEST");
+
+                    Thread.sleep(10000);
+            }catch(InterruptedException e){
+                Log.d("ENEMY","Enemy responded");
+            }
+
             return null; // 10초 기다림!
         }
 
