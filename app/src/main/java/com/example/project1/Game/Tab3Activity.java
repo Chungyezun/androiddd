@@ -63,6 +63,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 
@@ -107,6 +108,9 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
     Player enemy;
     Emitter.Listener battleListener;
     private Socket mSocket;
+    List<Marker> enemyMarker;
+    Marker myMarker;
+    List<MarkerOptions> enemyMarkerOptions;
 
 
     private void sendBattleRequest(String name) {
@@ -221,6 +225,13 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
 
         }else{
             for(int i = 0; i < length;i++){
+
+                MarkerOptions mko = new MarkerOptions()
+                        .position(new LatLng(app.getAllPlayers().get(i).getLocation().first, app.getAllPlayers().get(i).getLocation().second))
+                        .title(app.getAllPlayers().get(i).getName())
+                        .snippet(app.getAllPlayers().get(i).getUnique());
+                enemyMarkerOptions.add(mko);
+
                 if(app.getAllPlayers().get(i).getUnique().equals("직업2")) {
                     CircleOptions otherCircles = new CircleOptions()
                             .center(new LatLng(app.getAllPlayers().get(i).getLocation().first, app.getAllPlayers().get(i).getLocation().second))
@@ -252,8 +263,13 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
             if(!app.getAllPlayers().get(i).getName().equals(app.getMyPlayer().getName()) ){
                 enemyCircle.add(mGoogleMap.addCircle(enemies.get(i)));
                 enemyCircle.get(enemyCircle.size()-1).setTag(app.getAllPlayers().get(i).getName());
+
+                enemyMarker.add(mGoogleMap.addMarker(enemyMarkerOptions.get(i)));
+                enemyMarker.get(enemyCircle.size()-1).setTag(app.getAllPlayers().get(i).getName());
+
             }else{
                 enemyCircle.add(null);
+                enemyMarker.add(null);
                 Log.d("me","me");
             }
         }
@@ -261,10 +277,11 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
         mGoogleMap.setMyLocationEnabled(true);
         mGoogleMap.setOnMyLocationButtonClickListener(null);
         mGoogleMap.setOnMyLocationClickListener(null);
-        mGoogleMap.setOnCircleClickListener(new GoogleMap.OnCircleClickListener() {
+        mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener(){
+
             @Override
-            public void onCircleClick(Circle circle) {
-                String name = (String) circle.getTag();
+            public boolean onMarkerClick(Marker marker) {
+                String name = (String) marker.getTag();
                 Log.d("SELECT_NAME",name);
                 MyActivity request = new MyActivity();
                 request.startEvent();
@@ -273,13 +290,22 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
                 for(Player player : app.getAllPlayers()){
                     if(player.getName().equals(name)){
                         enemy = player;
+                        // 반경 계산해서 if 돌리자!!!!!!!!!!!
                         sendBattleRequest(enemy.getName());
                         break;
                     }
                 }
-                wd.show(getSupportFragmentManager(),name);
 
+                // if 로 처리!!
+                wd.show(getSupportFragmentManager(),name);
                 //Waiting For.. 창
+                return true;
+            }
+        });
+        mGoogleMap.setOnCircleClickListener(new GoogleMap.OnCircleClickListener() {
+            @Override
+            public void onCircleClick(Circle circle) {
+
             }
         });
         init();
