@@ -17,7 +17,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -49,6 +52,7 @@ public class Game_Fragment extends Fragment {
     private TextView mMaxhp;
     private SwipeRefreshLayout layout;
     private ImageView image;
+    private Boolean login = false;
 
     SwipeRefreshLayout swl;
 
@@ -113,20 +117,37 @@ public class Game_Fragment extends Fragment {
             @Override
             public void onClick(View v) {
                 player_name = String.valueOf(mEditText.getText());
-                Log.e("player",player_name);
                 Player newPlayer = new Player(player_name,unique,100,100);
-
+                Log.e("player",player_name);
+                if(unique.equals("직업1")) {
+                    newPlayer.MAX_HP = 200;
+                    newPlayer.hp = 200;
+                }else if(unique.equals("직업2")){
+                    newPlayer.MAX_HP = 300;
+                    newPlayer.hp = 300;
+                }
 
                 app = (MyApplication) getAppContext();
                 app.setPlayer(newPlayer);
                 mPlayerr.setText(newPlayer.getName());
                 mJikup.setText(newPlayer.getUnique());
-                mHp.setText(String.valueOf(newPlayer.getHP()));
-                mMaxhp.setText(String.valueOf(newPlayer.getMAXhp()));
                 app.getPosition();
                 UpdateGameThread ugthread = new UpdateGameThread(app);
                 ugthread.start();
-
+                if(app.getAllPlayers() != null) {
+                    for (int i = 0; i < app.getAllPlayers().size(); i++) {
+                        Player position = app.getAllPlayers().get(i);
+                        if (player_name.equals(position.getName()) && unique.equals(position.getUnique())) {
+                            app.setPlayer(new Player(player_name, unique, position.getHP(), position.getMAXhp()));
+                            mHp.setText(app.getMyPlayer().getHP());
+                            mMaxhp.setText(app.getMyPlayer().getMAXhp());
+                        } else {
+                            app.setPlayer(newPlayer);
+                            mHp.setText(String.valueOf(newPlayer.getHP()));
+                            mMaxhp.setText(String.valueOf(newPlayer.getMAXhp()));
+                        }
+                    }
+                }
             }
         });
         swl = (SwipeRefreshLayout) view.findViewById(R.id.swiperefreshGL);
@@ -136,7 +157,7 @@ public class Game_Fragment extends Fragment {
                 app = (MyApplication) getAppContext();
                 if(app.getAllPlayers() != null) {
                     players = app.getAllPlayers();
-                    Collections.sort(players);
+                    Collections.sort(players,Collections.<Player>reverseOrder());
                     GameAdapter nAdapter = new GameAdapter(players);
                     mRecyclerView.setAdapter(nAdapter);
                     Log.e("Hi", String.valueOf(players));

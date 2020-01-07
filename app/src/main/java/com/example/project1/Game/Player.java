@@ -8,10 +8,11 @@ public class Player implements Comparable{
     private String name;
     private String unique;
 
-    private int hp;
-    private int MAX_HP;
+    int hp;
+    int MAX_HP;
     private double Latitude;
     private double Longitude;
+
     int getBattleRequest;   //이것이 True 면, String enemy 확인해서 적 확인
     boolean ready;
     String enemy;               //Battle 승낙하면, Enemy.getBattleRequest True

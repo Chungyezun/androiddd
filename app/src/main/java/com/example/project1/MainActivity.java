@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private CallbackManager callbackManager;
     LoginButton loginButton;
     private boolean Logged_in = false;
-
+    private LoginManager loginManager;
     private Map<String, String> cache = new HashMap<>();
 
     Gson gson;
@@ -88,20 +88,21 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         fromCam = false;
         //Turn on volley!
-        if(AppHelper.requestQueue == null){
+        if (AppHelper.requestQueue == null) {
             AppHelper.requestQueue = Volley.newRequestQueue(getAppContext());
         }
 
-        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA},0);
+        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 0);
         iocustom = new IOcustom();
 
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getApplicationContext());
 
-        app = (MyApplication)this.getApplicationContext();
+        app = (MyApplication) this.getApplicationContext();
         iocustom.getImName(getAppContext());
 
-        if(!Logged_in) {
+        if (!Logged_in) {
+            Log.e("face", "hi");
             setContentView(R.layout.login); //첫 화면은 login.xml 로
             try {
                 PackageInfo info = getPackageManager().getPackageInfo(
@@ -116,135 +117,142 @@ public class MainActivity extends AppCompatActivity {
             } catch (NoSuchAlgorithmException e) {
             }
             callbackManager = CallbackManager.Factory.create();
+            loginManager = LoginManager.getInstance();
             loginButton = (LoginButton) findViewById(R.id.login_button);
-            // Callback registration
-            loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            loginButton.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onSuccess(LoginResult loginResult) {
+                public void onClick(View v) {
 
-                    Logged_in = true;
-                    Log.e("Error","success");
-                }
+                    // Callback registration
+                    loginManager.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+                        @Override
+                        public void onSuccess(LoginResult loginResult) {
 
-                @Override
-                public void onCancel() {
-                    // App code
-                    Log.e("Error", "cancel");
-                }
+                            Logged_in = true;
+                            Log.e("Error", String.valueOf(Logged_in));
+                            if (Logged_in) {
+                                setContentView(R.layout.activity_main);
+                                SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getAppContext(), getSupportFragmentManager());
+                                ViewPager viewPager = findViewById(R.id.view_pager);
+                                viewPager.setAdapter(sectionsPagerAdapter);
 
-                @Override
-                public void onError(FacebookException exception) {
-                    // App code
-                    Log.e("Error", "error");
+                                //TabLayout object (UI에 있는 것) 에 적용시키자
+                                final TabLayout tabs = findViewById(R.id.tabs);
+                                tabs.setupWithViewPager(viewPager);
+
+                                //FAB
+                                final FloatingActionButton fab = findViewById(R.id.fab);
+
+                                final Button btn_custom_logout = (Button) findViewById(R.id.logout_button);
+
+                                fab.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        buttonDo(tabPosition);
+                                    }
+                                });
+
+                                tabs.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager) {
+                                    @SuppressLint("RestrictedApi")
+                                    @Override
+                                    public void onTabSelected(TabLayout.Tab tab) {
+                                        tabPosition = tabs.getSelectedTabPosition();
+                                        if (tabPosition == 0) {
+                                            fab.setImageResource(R.drawable.ic_action_add);
+                                            fab.setVisibility(View.VISIBLE);
+                                            btn_custom_logout.setVisibility(View.VISIBLE);
+                                        } else if (tabPosition == 1) {
+                                            fab.setImageResource(R.drawable.ic_action_name);
+                                            fab.setVisibility(View.VISIBLE);
+                                            btn_custom_logout.setVisibility(View.VISIBLE);
+                                        } else {
+                                            fab.setVisibility(View.INVISIBLE);
+                                            btn_custom_logout.setVisibility(View.INVISIBLE);
+
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onTabUnselected(TabLayout.Tab tab) {
+
+                                    }
+
+                                    @Override
+                                    public void onTabReselected(TabLayout.Tab tab) {
+
+                                    }
+                                });
+
+                                app.getNames();         //이미지 데이터베이스 업데이트
+
+                                gson = new Gson();      //
+
+                                //CONTACTS 불러오기!!!
+                                iocustom.readFromFile(getAppContext()); //전화번호부 업데이트
+
+                                //로딩 완료가 되었으니, 이 값들을 sharedPreference 로 넘기자...
+
+
+                                btn_custom_logout.setOnClickListener(new View.OnClickListener() {
+
+                                    @Override
+
+                                    public void onClick(View view) {
+                                        loginManager.logOut();
+                                        Logged_in = false;
+                                        setContentView(R.layout.login);
+                                    }
+
+                                });
+
+                                ///////////////////////////////////////////////////////////////////
+
+                            }
+                        }
+
+                        @Override
+                        public void onCancel() {
+                            // App code
+                            Log.e("Error", "cancel");
+                        }
+
+                        @Override
+                        public void onError(FacebookException exception) {
+                            // App code
+                            Log.e("Error", "error");
+                        }
+                    });
                 }
             });
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-            //Viewpager 및 Adapter 를 만들어주자
-
-            Log.e("Error", "success");
-        }
-        setContentView(R.layout.activity_main);
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getAppContext(), getSupportFragmentManager());
-        ViewPager viewPager = findViewById(R.id.view_pager);
-        viewPager.setAdapter(sectionsPagerAdapter);
-
-        //TabLayout object (UI에 있는 것) 에 적용시키자
-        final TabLayout tabs = findViewById(R.id.tabs);
-        tabs.setupWithViewPager(viewPager);
-
-        //FAB
-        final FloatingActionButton fab = findViewById(R.id.fab);
-
-        final Button btn_custom_logout = (Button) findViewById(R.id.logout_button);
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                buttonDo(tabPosition);
-            }
-        });
-
-        tabs.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager){
-            @SuppressLint("RestrictedApi")
-            @Override
-            public void onTabSelected(TabLayout.Tab tab){
-                tabPosition = tabs.getSelectedTabPosition();
-                if(tabPosition == 0){
-                    fab.setImageResource(R.drawable.ic_action_add);
-                    fab.setVisibility(View.VISIBLE);
-                    btn_custom_logout.setVisibility(View.VISIBLE);
-                }else if(tabPosition == 1){
-                    fab.setImageResource(R.drawable.ic_action_name);
-                    fab.setVisibility(View.VISIBLE);
-                    btn_custom_logout.setVisibility(View.VISIBLE);
-                }else{
-                    fab.setVisibility(View.INVISIBLE);
-                    btn_custom_logout.setVisibility(View.INVISIBLE);
-
-                }
-            }
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab){
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab){
-
-            }
-        });
-
-        app.getNames();         //이미지 데이터베이스 업데이트
-
-        gson = new Gson();      //
-
-        //CONTACTS 불러오기!!!
-        iocustom.readFromFile(getAppContext()); //전화번호부 업데이트
-
-        //로딩 완료가 되었으니, 이 값들을 sharedPreference 로 넘기자...
-
-
-        btn_custom_logout.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-
-            public void onClick(View view) {
-                LoginManager.getInstance().logOut();
-            }
-
-        });
-
-///////////////////////////////////////////////////////////////////
-
-    }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        callbackManager.onActivityResult(requestCode, resultCode, data);
-        super.onActivityResult(requestCode, resultCode, data);
-        if(fromCam){
-
-            fromCam = false;
         }
     }
 
-    protected void onResume(){
-        super.onResume();
-        app.setCurrentActivity(this);
-    }
-    protected void onPause(){
-        clearReferences();
-        super.onPause();
-    }
-    protected void onDestroy(){
-        clearReferences();
-        super.onDestroy();
-    }
-    protected void clearReferences(){
-        Activity currAct = app.getCurrentActivity();
-        if(this.equals(currAct))app.setCurrentActivity(null);
-    }
 
+        @Override
+        protected void onActivityResult ( int requestCode, int resultCode, Intent data){
+            callbackManager.onActivityResult(requestCode, resultCode, data);
+            super.onActivityResult(requestCode, resultCode, data);
+            if (fromCam) {
 
+                fromCam = false;
+            }
+        }
+
+        protected void onResume () {
+            super.onResume();
+            app.setCurrentActivity(this);
+        }
+        protected void onPause () {
+            clearReferences();
+            super.onPause();
+        }
+        protected void onDestroy () {
+            clearReferences();
+            super.onDestroy();
+        }
+        protected void clearReferences () {
+            Activity currAct = app.getCurrentActivity();
+            if (this.equals(currAct)) app.setCurrentActivity(null);
+        }
 
 }
