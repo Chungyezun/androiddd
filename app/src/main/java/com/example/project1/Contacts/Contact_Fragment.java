@@ -72,20 +72,13 @@ public class Contact_Fragment extends Fragment {
         swl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if(mRecyclerView.computeVerticalScrollExtent() == 0){
                     Log.d("CONTACTS","CONTACT HAS BEEN REFRESHED");
                     app.getContacts();
                     //MyAdapter nAdapter = new MyAdapter(R.layout.row,app);
                     mAdapter.notifyDataSetChanged();
                     mRecyclerView.refreshDrawableState();
+                    swl.setRefreshing(false);
 
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run(){
-                            swl.setRefreshing(false);
-                        }
-                    },300);
-                }
             }
         });
 

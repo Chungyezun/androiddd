@@ -116,7 +116,7 @@ public class GameActivity extends Activity implements SensorEventListener {
         mSocket.on("ouch", new Emitter.Listener() {
             @Override
             public void call(final Object... objects) {
-                mSocket.emit("surrender","");
+
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -128,6 +128,14 @@ public class GameActivity extends Activity implements SensorEventListener {
                         Log.d("HP",player1.hp + "");
                         //여기에 if문
                         if(player1.hp<0){
+                            JSONObject send = new JSONObject();
+                            try {
+                                send.accumulate("from", player1.getName());
+                                send.accumulate("to", player2.getName());
+                            }catch(JSONException e){
+
+                            }
+                            mSocket.emit("surrender",send);
 
                             AlertDialog.Builder adb = new AlertDialog.Builder(GameActivity.this);
                             adb.setTitle("패배!");
