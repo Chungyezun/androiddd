@@ -164,8 +164,5 @@ public class Gallery_Fragment extends Fragment {
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
     }
-
-
-
 }
 
