@@ -207,6 +207,8 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
                                     }
                                 });
                 //mSocket.emit("AcceptBattleRequest",0); //YES 라고 가정할 때...
+                AlertDialog alert = adb.create();
+                alert.show();
             }
         });
 
