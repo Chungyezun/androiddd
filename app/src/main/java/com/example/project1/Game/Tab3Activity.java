@@ -169,8 +169,10 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
         });
 
         mSocket.on("Accepted", new Emitter.Listener() {
+
             @Override
             public void call(Object... args) {
+                Log.d("ACC","They Accepted. Let's go");
                 Intent intent = new Intent(getApplicationContext(), GameActivity.class);
                 intent.putExtra("Enemy",enemy.getName());
                 startActivity(intent);
@@ -201,6 +203,9 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
                                                     yes.accumulate("answer", true);
                                                     yes.accumulate("to",app.getMyPlayer().getName());
                                                     yes.accumulate("from",from);
+                                                    Intent intent = new Intent(getApplicationContext(), GameActivity.class);
+                                                    intent.putExtra("Enemy",from);
+                                                    startActivity(intent);
                                                 }catch(JSONException e){
 
                                                 }
