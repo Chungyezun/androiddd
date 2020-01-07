@@ -6,16 +6,25 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.project1.MyApplication;
 import com.example.project1.R;
+import com.github.nkzawa.emitter.Emitter;
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.URISyntaxException;
 
 
 public class GameActivity extends Activity implements SensorEventListener {
 
-    public static int cnt = 0;
+    public static int cnt = 1;
 
     private TextView tView;
 
@@ -31,6 +40,8 @@ public class GameActivity extends Activity implements SensorEventListener {
     private Player player1;
     private Player player2;
     private MyApplication app;
+    private Socket mSocket;
+
 
     private static final int SHAKE_THRESHOLD = 800;
     private static final int DATA_X = SensorManager.DATA_X;
@@ -39,11 +50,43 @@ public class GameActivity extends Activity implements SensorEventListener {
 
     private SensorManager sensorManager;
     private Sensor accelerormeterSensor;
+    String setURL = "http://22f3e836.ngrok.io";
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         app = (MyApplication) getApplicationContext();
+        try{
+            mSocket = IO.socket(setURL);
+        }catch(URISyntaxException e){}
+
+        // 서버로부터의 소켓을 만들자!
+        mSocket.connect();
+
+        mSocket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
+            @Override
+            public void call(Object... objects) {
+                Log.d("SOCKET","Battle Connected");
+            }
+        });
+
+        mSocket.on("ouch", new Emitter.Listener() {
+            @Override
+            public void call(Object... objects) {
+                JSONObject k = (JSONObject) objects[0];
+                    //int dmg = (Integer) k.get("Damage");
+                player1.hp = player1.hp - cnt;
+                Log.d("SOCKET","Battle Connected");
+
+            }
+        });
+
+
+
+
+
+
+
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         accelerormeterSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         tView = (TextView) findViewById(R.id.cntView);
@@ -72,7 +115,7 @@ public class GameActivity extends Activity implements SensorEventListener {
         super.onStop();
         if (sensorManager != null)
             sensorManager.unregisterListener(this);
-    }
+        }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
@@ -89,6 +132,13 @@ public class GameActivity extends Activity implements SensorEventListener {
 
                 if (speed > SHAKE_THRESHOLD) {
                     if(start) {
+                        JSONObject data = new JSONObject();
+                        try{
+                            data.put("from",app.getMyPlayer().getName());
+                            data.put("to",player2.getName());
+                        }catch(JSONException e){
+                        }
+                        mSocket.emit("damage",data);
                         tView.setText("" + (++cnt));
                         
                     }
