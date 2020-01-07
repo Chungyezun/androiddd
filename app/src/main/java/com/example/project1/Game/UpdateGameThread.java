@@ -38,8 +38,8 @@ public class UpdateGameThread extends Thread{
         this.app = app;
     };
 
-    String getURL = "http://b1b3f083.ngrok.io/getPlayer";
-    String setURL = "http://b1b3f083.ngrok.io/postPlayer/";
+    String getURL = "http://54083c4f.ngrok.io/getPlayer";
+    String setURL = "http://54083c4f.ngrok.io/postPlayer/";
 
 
     public void updateUS(){

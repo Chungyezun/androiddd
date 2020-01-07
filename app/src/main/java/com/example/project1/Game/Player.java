@@ -12,6 +12,8 @@ public class Player implements Comparable{
     private int MAX_HP;
     private double Latitude;
     private double Longitude;
+    private boolean fight;
+    private Player enemy;
 
 
 

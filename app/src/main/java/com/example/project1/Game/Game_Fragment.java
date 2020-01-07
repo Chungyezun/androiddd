@@ -143,7 +143,7 @@ public class Game_Fragment extends Fragment {
                 app = (MyApplication) getAppContext();
                 if(app.getAllPlayers() != null) {
                     players = app.getAllPlayers();
-                    Collections.sort(players);
+                    Collections.sort(players,Collections.<Player>reverseOrder());
                     GameAdapter nAdapter = new GameAdapter(players);
                     mRecyclerView.setAdapter(nAdapter);
                     Log.e("Hi", String.valueOf(players));

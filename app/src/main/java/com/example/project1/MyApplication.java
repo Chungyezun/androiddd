@@ -50,7 +50,7 @@ public class MyApplication extends Application {
     private static LocationRequest locationRequest;
     private static LocationCallback locationCallback;
     private static FusedLocationProviderClient mFusedLocationClient;
-    private static String URL = "http://b1b3f083.ngrok.io/";
+    private static String URL = "http://54083c4f.ngrok.io/";
     public String getURL(){
         return this.URL;
     }
