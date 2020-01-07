@@ -57,8 +57,10 @@ public class GameActivity extends Activity implements SensorEventListener {
     private SensorManager sensorManager;
     private Sensor accelerormeterSensor;
     String setURL = "http://22f3e836.ngrok.io";
+    boolean result;
 
     protected void onCreate(Bundle savedInstanceState) {
+        result = false;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         app = (MyApplication) getApplicationContext();
@@ -93,6 +95,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 
             @Override
             public void call(Object... args) {
+                result = false;
                 AlertDialog.Builder adb = new AlertDialog.Builder(GameActivity.this);
                 adb.setTitle("승리!");
                 adb.setMessage("축하합니다")
@@ -128,6 +131,7 @@ public class GameActivity extends Activity implements SensorEventListener {
                         Log.d("HP",player1.hp + "");
                         //여기에 if문
                         if(player1.hp<0){
+                            result = false;
                             JSONObject send = new JSONObject();
                             try {
                                 send.accumulate("from", player1.getName());
@@ -153,7 +157,7 @@ public class GameActivity extends Activity implements SensorEventListener {
                             if (!GameActivity.this.isFinishing()) {
 
                                 AlertDialog alert = adb.create();
-                                alert.show();
+                               if(!result)alert.show();
                             }
                         }
                     }
