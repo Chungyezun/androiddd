@@ -119,13 +119,13 @@ public class Game_Fragment extends Fragment {
                 player_name = String.valueOf(mEditText.getText());
                 Player newPlayer = new Player(player_name,unique,100,100);
                 Log.e("player",player_name);
-                if(unique.equals("직업1")) {
-                    newPlayer.MAX_HP = 200;
-                    newPlayer.hp = 200;
-                }else if(unique.equals("직업2")){
-                    newPlayer.MAX_HP = 300;
-                    newPlayer.hp = 300;
-                }
+//                if(unique.equals("직업1")) {
+//                    newPlayer.MAX_HP = 200;
+//                    newPlayer.hp = 200;
+//                }else if(unique.equals("직업2")){
+//                    newPlayer.MAX_HP = 300;
+//                    newPlayer.hp = 300;
+//                }
 
                 app = (MyApplication) getAppContext();
                 app.setPlayer(newPlayer);

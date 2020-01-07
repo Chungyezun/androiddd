@@ -28,10 +28,12 @@ import java.net.URISyntaxException;
 
 public class GameActivity extends Activity implements SensorEventListener {
 
-    public static int cnt = 1;
+    public static int cnt = 0;
 
     private TextView tView;
-
+    private TextView tView2;
+    private TextView myPlayer;
+    private TextView enemy1;
     private long lastTime;
     private float speed;
     private float lastX;
@@ -60,6 +62,11 @@ public class GameActivity extends Activity implements SensorEventListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         app = (MyApplication) getApplicationContext();
+        tView = (TextView)findViewById(R.id.cntView);
+        tView2 = (TextView)findViewById(R.id.textView2);
+        myPlayer = (TextView)findViewById(R.id.myPlayer);
+        enemy1 = (TextView)findViewById(R.id.enemy);
+
 
         try{
             mSocket = IO.socket(setURL);
@@ -72,6 +79,8 @@ public class GameActivity extends Activity implements SensorEventListener {
         }
         // 서버로부터의 소켓을 만들자!
         mSocket.connect();
+        myPlayer.setText(app.getMyPlayer().getName());
+        enemy1.setText(player2.getName());
 
         mSocket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
             @Override
@@ -114,6 +123,8 @@ public class GameActivity extends Activity implements SensorEventListener {
                         JSONObject k = (JSONObject) objects[0];
                         //int dmg = (Integer) k.get("Damage");
                         player1.hp = player1.hp - cnt;
+                        tView2.setText("" + (++cnt));
+                        progressBar1.incrementProgressBy(-cnt);
                         Log.d("HP",player1.hp + "");
                         //여기에 if문
                         if(player1.hp<0){
@@ -198,6 +209,7 @@ public class GameActivity extends Activity implements SensorEventListener {
                         }
                         mSocket.emit("damage",data);
                         tView.setText("" + (++cnt));
+                        progressBar2.incrementProgressBy(-cnt);
                         
                     }
                 }
