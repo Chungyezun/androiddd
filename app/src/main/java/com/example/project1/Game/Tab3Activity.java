@@ -112,7 +112,7 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
     Marker myMarker;
     List<MarkerOptions> enemyMarkerOptions;
     Handler mHandler;
-
+    String enemyName;
 
     private void sendBattleRequest(String name) {
         JSONObject data = new JSONObject();
@@ -174,67 +174,76 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
             public void call(Object... args) {
                 Log.d("ACC","They Accepted. Let's go");
                 Intent intent = new Intent(getApplicationContext(), GameActivity.class);
-                intent.putExtra("Enemy",enemy.getName());
+                intent.putExtra("Enemy",enemyName);
                 startActivity(intent);
             }
         });
         mSocket.on("BattleRequest", new Emitter.Listener() {
             @Override
             public void call(Object... objects) {
-                Log.d("SOCKET","You have got a battle Request");
-                final String from = (String) objects[0];
-                //Accept or not.. This is the question...
+                Log.d("SOCKET", "You have got a battle Request");
+                JSONObject k = (JSONObject) objects[0];
+                try {
 
-                //mSocket.emit("AcceptBattleRequest",0); //YES 라고 가정할 때...
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        AlertDialog.Builder adb = new AlertDialog.Builder(Tab3Activity.this);
-                        adb.setTitle("대결신청");
-                        adb.setMessage("싸우시겠습니까?");
-                        adb.setMessage("프로그램을 종료할 것입니까?")
-                                .setCancelable(false)
-                                .setPositiveButton("싸운다",
-                                        new DialogInterface.OnClickListener() {
-                                            public void onClick(
-                                                    DialogInterface dialog, int id) {
-                                                JSONObject yes = new JSONObject();
-                                                try {
-                                                    yes.accumulate("answer", true);
-                                                    yes.accumulate("to",app.getMyPlayer().getName());
-                                                    yes.accumulate("from",from);
-                                                    Intent intent = new Intent(getApplicationContext(), GameActivity.class);
-                                                    intent.putExtra("Enemy",from);
-                                                    startActivity(intent);
-                                                }catch(JSONException e){
-                                                    Log.e("why","why");
+                    final String from = (String) k.get("From");;
+                    enemyName = from;
+
+                    //Accept or not.. This is the question...
+
+                    //mSocket.emit("AcceptBattleRequest",0); //YES 라고 가정할 때...
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            AlertDialog.Builder adb = new AlertDialog.Builder(Tab3Activity.this);
+                            adb.setTitle("대결신청");
+                            adb.setMessage("싸우시겠습니까?");
+                            adb.setMessage("프로그램을 종료할 것입니까?")
+                                    .setCancelable(false)
+                                    .setPositiveButton("싸운다",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(
+                                                        DialogInterface dialog, int id) {
+                                                    JSONObject yes = new JSONObject();
+                                                    try {
+                                                        yes.accumulate("answer", true);
+                                                        yes.accumulate("to", app.getMyPlayer().getName());
+                                                        yes.accumulate("from", from);
+                                                        Intent intent = new Intent(getApplicationContext(), GameActivity.class);
+                                                        intent.putExtra("Enemy", from);
+                                                        startActivity(intent);
+                                                    } catch (JSONException e) {
+                                                        Log.e("why", "why");
+                                                    }
+                                                    Log.e("hey", "1");
+                                                    mSocket.emit("AcceptBattleRequest", yes);
+                                                    dialog.cancel();
+                                                    Log.e("gg", "gg");
                                                 }
-                                                Log.e("hey","1");
-                                                mSocket.emit("AcceptBattleRequest",yes);
-                                                dialog.cancel();
-                                                Log.e("gg","gg");
-                                            }
-                                        })
-                                .setNegativeButton("도망간다",
-                                        new DialogInterface.OnClickListener() {
-                                            public void onClick(
-                                                    DialogInterface dialog, int id) {
-                                                JSONObject yes = new JSONObject();
-                                                try {
-                                                    yes.accumulate("answer", false);
-                                                }catch(JSONException e){
+                                            })
+                                    .setNegativeButton("도망간다",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(
+                                                        DialogInterface dialog, int id) {
+                                                    JSONObject yes = new JSONObject();
+                                                    try {
+                                                        yes.accumulate("answer", false);
+                                                    } catch (JSONException e) {
 
+                                                    }
+                                                    mSocket.emit("AcceptBattleRequest", yes);
+                                                    dialog.cancel();
                                                 }
-                                                mSocket.emit("AcceptBattleRequest",yes);
-                                                dialog.cancel();
-                                            }
-                                        });
-                        if(!Tab3Activity.this.isFinishing()){
-                            AlertDialog alert = adb.create();
-                            alert.show();}
-                    }
-                });
+                                            });
+                            if (!Tab3Activity.this.isFinishing()) {
+                                AlertDialog alert = adb.create();
+                                alert.show();
+                            }
+                        }
+                    });
 
+                }catch (JSONException e){
+
+                }
             }
         });
 
@@ -345,7 +354,7 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
                 if(name == null){
 
                 }else{
-
+                    enemyName = name;
 
                 Log.d("SELECT_NAME",name);
 
