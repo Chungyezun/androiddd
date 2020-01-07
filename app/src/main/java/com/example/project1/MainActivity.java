@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
@@ -46,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private int tabPosition;
     private CallbackManager callbackManager;
     LoginButton loginButton;
-    private boolean Logged_in = false;
+    private boolean Logged_in;
     private LoginManager loginManager;
     private Map<String, String> cache = new HashMap<>();
 
@@ -86,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Logged_in = false;
         fromCam = false;
         //Turn on volley!
         if (AppHelper.requestQueue == null) {
@@ -230,12 +232,19 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onActivityResult ( int requestCode, int resultCode, Intent data){
-            callbackManager.onActivityResult(requestCode, resultCode, data);
-            super.onActivityResult(requestCode, resultCode, data);
-            if (fromCam) {
 
-                fromCam = false;
+            if(!Logged_in){
+                callbackManager.onActivityResult(requestCode, resultCode, data);
+
+            }else{
+                if (resultCode == RESULT_OK) {
+                    Bundle extras = data.getExtras();
+                    Bitmap imageBitmap = (Bitmap) extras.get("data");
+                    iocustom.sendImage(imageBitmap,getAppContext());
+                }
             }
+            super.onActivityResult(requestCode, resultCode, data);
+
         }
 
         protected void onResume () {
