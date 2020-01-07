@@ -24,6 +24,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
@@ -110,6 +111,7 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
     List<Marker> enemyMarker;
     Marker myMarker;
     List<MarkerOptions> enemyMarkerOptions;
+    Handler mHandler;
 
 
     private void sendBattleRequest(String name) {
@@ -166,18 +168,26 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
             }
         });
 
+        mSocket.on("Accepted", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                Intent intent = new Intent(getApplicationContext(), GameActivity.class);
+                intent.putExtra("Enemy",enemy.getName());
+                startActivity(intent);
+            }
+        });
         mSocket.on("BattleRequest", new Emitter.Listener() {
             @Override
             public void call(Object... objects) {
                 Log.d("SOCKET","You have got a battle Request");
-                String from = (String) objects[0];
+                final String from = (String) objects[0];
                 //Accept or not.. This is the question...
 
                 //mSocket.emit("AcceptBattleRequest",0); //YES 라고 가정할 때...
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        AlertDialog.Builder adb = new AlertDialog.Builder(getApplicationContext());
+                        AlertDialog.Builder adb = new AlertDialog.Builder(Tab3Activity.this);
                         adb.setTitle("대결신청");
                         adb.setMessage("싸우시겠습니까?");
                         adb.setMessage("프로그램을 종료할 것입니까?")
@@ -189,6 +199,8 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
                                                 JSONObject yes = new JSONObject();
                                                 try {
                                                     yes.accumulate("answer", true);
+                                                    yes.accumulate("to",app.getMyPlayer().getName());
+                                                    yes.accumulate("from",from);
                                                 }catch(JSONException e){
 
                                                 }
