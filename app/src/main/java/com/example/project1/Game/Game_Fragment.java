@@ -131,6 +131,8 @@ public class Game_Fragment extends Fragment {
                 app.setPlayer(newPlayer);
                 mPlayerr.setText(newPlayer.getName());
                 mJikup.setText(newPlayer.getUnique());
+                mHp.setText(String.valueOf(app.getMyPlayer().getHP()));
+                mMaxhp.setText(String.valueOf(app.getMyPlayer().getMAXhp()));
                 app.getPosition();
                 UpdateGameThread ugthread = new UpdateGameThread(app);
                 ugthread.start();
