@@ -357,6 +357,7 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
                     enemyName = name;
 
                 Log.d("SELECT_NAME",name);
+
                 for(Player p:app.getAllPlayers()){
                     if(p.getName().equals(name)){
                         enemy = p;
