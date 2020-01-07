@@ -348,6 +348,7 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
 
 
                 Log.d("SELECT_NAME",name);
+
                 MyActivity request = new MyActivity();
                 request.startEvent();
                 wd = new WaitingDialog();
@@ -364,7 +365,7 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
                         enemyLocation.setLongitude(enemy.getLocation().second);
                         double distance = myLocation.distanceTo(enemyLocation);
                         if(distance <= 200) {
-                            sendBattleRequest(enemy.getName());
+                            sendBattleRequest(name);
                         }
                         break;
                     }
