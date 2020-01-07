@@ -356,7 +356,16 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
                     if(player.getName().equals(name)){
                         enemy = player;
                         // 반경 계산해서 if 돌리자!!!!!!!!!!!
-                        sendBattleRequest(enemy.getName());
+                        Location myLocation = new Location("PointA");
+                        Location enemyLocation = new Location("PointB");
+                        myLocation.setLatitude(app.getMyPlayer().getLocation().first);
+                        myLocation.setLongitude(app.getMyPlayer().getLocation().second);
+                        enemyLocation.setLatitude(enemy.getLocation().first);
+                        enemyLocation.setLongitude(enemy.getLocation().second);
+                        double distance = myLocation.distanceTo(enemyLocation);
+                        if(distance <= 200) {
+                            sendBattleRequest(enemy.getName());
+                        }
                         break;
                     }
                 }

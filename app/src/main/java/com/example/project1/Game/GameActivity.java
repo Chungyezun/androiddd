@@ -6,11 +6,10 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.view.View;
-import android.view.Window;
-import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.project1.MyApplication;
 import com.example.project1.R;
 
 
@@ -19,7 +18,6 @@ public class GameActivity extends Activity implements SensorEventListener {
     public static int cnt = 0;
 
     private TextView tView;
-    private Button resetBtn;
 
     private long lastTime;
     private float speed;
@@ -27,7 +25,12 @@ public class GameActivity extends Activity implements SensorEventListener {
     private float lastY;
     private float lastZ;
     private float x, y, z;
-    private boolean start = false;
+    private boolean start = true;
+    private ProgressBar progressBar1;
+    private ProgressBar progressBar2;
+    private Player player1;
+    private Player player2;
+    private MyApplication app;
 
     private static final int SHAKE_THRESHOLD = 800;
     private static final int DATA_X = SensorManager.DATA_X;
@@ -40,17 +43,20 @@ public class GameActivity extends Activity implements SensorEventListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+        app = (MyApplication) getApplicationContext();
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         accelerormeterSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         tView = (TextView) findViewById(R.id.cntView);
-        resetBtn = (Button) findViewById(R.id.resetBtn);
-        resetBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                start = true;
-            }
-        });
         tView.setText("" + cnt);
+        progressBar1 = (ProgressBar) findViewById((R.id.progressBar));
+        progressBar2 = (ProgressBar) findViewById((R.id.progressBar2));
+        player1 = app.getMyPlayer();
+        String enemy = getIntent().getStringExtra("Enemy");
+        for(int i = 0; i < app.getAllPlayers().size();i++) {
+            if(app.getAllPlayers().get(i).equals(enemy)) {
+                player2 = app.getAllPlayers().get(i);
+            }
+        }
     }
 
     @Override
@@ -84,6 +90,7 @@ public class GameActivity extends Activity implements SensorEventListener {
                 if (speed > SHAKE_THRESHOLD) {
                     if(start) {
                         tView.setText("" + (++cnt));
+                        
                     }
                 }
 
