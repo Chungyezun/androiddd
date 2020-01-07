@@ -12,9 +12,25 @@ public class Player implements Comparable{
     private int MAX_HP;
     private double Latitude;
     private double Longitude;
+    int getBattleRequest;   //이것이 True 면, String enemy 확인해서 적 확인
+    boolean ready;
+    String enemy;               //Battle 승낙하면, Enemy.getBattleRequest True
 
-
-
+    public void setReady(boolean ready) {
+        this.ready = ready;
+    }
+    public boolean myReady() {
+        return this.ready;
+    }
+    public void setGetBattleRequest(int battleRequest){
+        this.getBattleRequest = battleRequest;
+    }
+    public int myGetBattleRequest(){
+        return this.getBattleRequest;
+    }
+    public void setEnemy(String enemyName){
+        this.enemy = enemyName;
+    }
     /* 플레이어의 직업을 설정하자!!!
 
 
@@ -41,6 +57,16 @@ public class Player implements Comparable{
     public Pair<Double,Double> getLocation(){
         return new Pair(this.Latitude,this.Longitude);
     }
+
+
+
+    // getBattleRequest 둘다 True 면 전투 돌입!!!
+
+
+    //.hasEnemy 가 true ==> 상대방이 내 Request 받아줌!
+    //
+
+
     public void setLocation(double Latitude,double Longitude){
         this.Latitude = Latitude;
         this.Longitude = Longitude;
