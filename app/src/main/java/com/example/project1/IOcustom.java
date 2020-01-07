@@ -98,7 +98,7 @@ public class IOcustom {
 //Convert bitmap to byte array
         Bitmap bitmap = data;
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 0 /*ignored for PNG*/, bos);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50 /*ignored for PNG*/, bos);
         byte[] bitmapdata = bos.toByteArray();
 
 //write the bytes in file

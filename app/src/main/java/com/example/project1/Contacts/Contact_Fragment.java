@@ -77,6 +77,7 @@ public class Contact_Fragment extends Fragment {
                     app.getContacts();
                     //MyAdapter nAdapter = new MyAdapter(R.layout.row,app);
                     mAdapter.notifyDataSetChanged();
+                    mRecyclerView.refreshDrawableState();
 
                     new Handler().postDelayed(new Runnable() {
                         @Override

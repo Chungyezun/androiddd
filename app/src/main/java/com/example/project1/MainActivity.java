@@ -58,14 +58,14 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void buttonDo(int idx){
-        final Intent camIntent = new Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
+        final Intent camIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if(idx == 0) {
             Intent intent = new Intent(this, AddContact.class);
             Log.e("TAB_PRESS", "0");
             //fromCam = true;
             startActivity(intent); // intent 를 통해 새 activity 에 접속?
         }else if(idx == 1) {
-                startActivity(camIntent);
+                startActivityForResult(camIntent,1);
                 Log.e("TAB_PRESS", "1");
         }
     }
@@ -323,6 +323,7 @@ public class MainActivity extends AppCompatActivity {
                     Bundle extras = data.getExtras();
                     Bitmap imageBitmap = (Bitmap) extras.get("data");
                     iocustom.sendImage(imageBitmap,getAppContext());
+                    Log.d("IMAGE","SENT IMAGE");
                 }
             }
             super.onActivityResult(requestCode, resultCode, data);
