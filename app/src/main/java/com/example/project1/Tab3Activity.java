@@ -113,7 +113,7 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
         battleRadius = new CircleOptions()
             .center( new LatLng(app.getMyPlayer().getLocation().first,app.getMyPlayer().getLocation().second))
                 .radius(50)
-                .fillColor(Color.parseColor("#880000ff"))
+                .fillColor(Color.parseColor("#4D0000ff"))
                 .strokeWidth(0f)
                 .clickable(false);
         myCircle = mGoogleMap.addCircle(battleRadius);
@@ -133,12 +133,29 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
 
         }else{
             for(int i = 0; i < length;i++){
-                if(!app.getAllPlayers().get(i).getName().equals(app.getMyPlayer().getName()) ){
+                if(app.getAllPlayers().get(i).getUnique().equals("직업2")) {
                     CircleOptions otherCircles = new CircleOptions()
-                            .center( new LatLng(app.getAllPlayers().get(i).getLocation().first,app.getAllPlayers().get(i).getLocation().second))
-                            .radius(12)
-                            .fillColor(Color.parseColor("#8800ff00"))
-                            .clickable(true);
+                            .center(new LatLng(app.getAllPlayers().get(i).getLocation().first, app.getAllPlayers().get(i).getLocation().second))
+                            .radius(50)
+                            .fillColor(Color.parseColor("#4D0000ff"))
+                            .strokeWidth(0f)
+                            .clickable(false);
+                    enemies.add(otherCircles);
+                }else if(app.getAllPlayers().get(i).getUnique().equals("직업1")){
+                    CircleOptions otherCircles = new CircleOptions()
+                            .center(new LatLng(app.getAllPlayers().get(i).getLocation().first, app.getAllPlayers().get(i).getLocation().second))
+                            .radius(70)
+                            .fillColor(Color.parseColor("#4DEE0000"))
+                            .strokeWidth(0f)
+                            .clickable(false);
+                    enemies.add(otherCircles);
+                }else{
+                    CircleOptions otherCircles = new CircleOptions()
+                            .center(new LatLng(app.getAllPlayers().get(i).getLocation().first, app.getAllPlayers().get(i).getLocation().second))
+                            .radius(50)
+                            .fillColor(Color.parseColor("#4D0000ff"))
+                            .strokeWidth(0f)
+                            .clickable(false);
                     enemies.add(otherCircles);
                 }
             }

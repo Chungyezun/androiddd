@@ -8,8 +8,8 @@ public class Player implements Comparable{
     private String name;
     private String unique;
 
-    private int hp;
-    private int MAX_HP;
+    int hp;
+    int MAX_HP;
     private double Latitude;
     private double Longitude;
     private boolean fight;
