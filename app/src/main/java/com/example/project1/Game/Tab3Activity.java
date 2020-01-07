@@ -218,6 +218,8 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
 
         enemies = new ArrayList<>();
         enemyCircle = new ArrayList<>();
+        enemyMarkerOptions = new ArrayList<>();
+        enemyMarker = new ArrayList<>();
 
 
         List<Player> allPlayers = app.getAllPlayers();
