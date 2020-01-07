@@ -3,7 +3,7 @@ package com.example.project1.Game;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.app.Dialog;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -34,7 +34,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -443,7 +442,7 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
         public static class WaitingDialog extends DialogFragment
         {
             @Override
-            public Dialog onCreateDialog(Bundle savedInstanceState) {
+            public AlertDialog onCreateDialog(Bundle savedInstanceState) {
             // Use the Builder class for convenient dialog construction
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
