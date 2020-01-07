@@ -173,7 +173,41 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
                 Log.d("SOCKET","You have got a battle Request");
                 String from = (String) objects[0];
                 //Accept or not.. This is the question...
-                mSocket.emit("AcceptBattleRequest",0); //YES 라고 가정할 때...
+                AlertDialog.Builder adb = new AlertDialog.Builder(getApplicationContext());
+                adb.setTitle("대결신청");
+                adb.setMessage("싸우시겠습니까?");
+                adb.setMessage("프로그램을 종료할 것입니까?")
+                .setCancelable(false)
+                .setPositiveButton("싸운다",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(
+                                            DialogInterface dialog, int id) {
+                                        JSONObject yes = new JSONObject();
+                                        try {
+                                            yes.accumulate("answer", true);
+                                        }catch(JSONException e){
+
+                                        }
+                                        mSocket.emit("AcceptBattleRequest",yes);
+                                        dialog.cancel();
+                                    }
+                                })
+                        .setNegativeButton("도망간다",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(
+                                            DialogInterface dialog, int id) {
+                                        JSONObject yes = new JSONObject();
+                                        try {
+                                            yes.accumulate("answer", false);
+                                        }catch(JSONException e){
+
+                                        }
+                                        mSocket.emit("AcceptBattleRequest",yes);
+                                        dialog.cancel()
+                                        dialog.cancel();
+                                    }
+                                });
+                //mSocket.emit("AcceptBattleRequest",0); //YES 라고 가정할 때...
             }
         });
 
@@ -277,13 +311,15 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
         }
 
         mGoogleMap.setMyLocationEnabled(true);
-        mGoogleMap.setOnMyLocationButtonClickListener(null);
-        mGoogleMap.setOnMyLocationClickListener(null);
-        mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener(){
-
+        mGoogleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
-            public boolean onMarkerClick(Marker marker) {
+            public void onInfoWindowClick(Marker marker) {
                 String name = (String) marker.getTag();
+                if(name == null){
+
+                }else{
+
+
                 Log.d("SELECT_NAME",name);
                 MyActivity request = new MyActivity();
                 request.startEvent();
@@ -301,7 +337,16 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
                 // if 로 처리!!
                 wd.show(getSupportFragmentManager(),name);
                 //Waiting For.. 창
-                return true;
+                }
+            }
+        });
+        mGoogleMap.setOnMyLocationButtonClickListener(null);
+        mGoogleMap.setOnMyLocationClickListener(null);
+        mGoogleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener(){
+
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                return false;
             }
         });
         mGoogleMap.setOnCircleClickListener(new GoogleMap.OnCircleClickListener() {
@@ -332,7 +377,7 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
                 }
             }
         }
-        myCircle.setCenter(new LatLng(app.getMyPlayer().getLocation().first,app.getMyPlayer().getLocation().second));
+        myMarker.setPosition(new LatLng(app.getMyPlayer().getLocation().first,app.getMyPlayer().getLocation().second));
 
     }
 
@@ -384,7 +429,7 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
             optFirst.position(latLng);// 위도 • 경도
             optFirst.title("Current Position");// 제목 미리보기
             optFirst.snippet("Snippet");
-            mGoogleMap.addMarker(optFirst).showInfoWindow();
+            myMarker = mGoogleMap.addMarker(optFirst);
             t.start();
     }
         public static class WaitingDialog extends DialogFragment
