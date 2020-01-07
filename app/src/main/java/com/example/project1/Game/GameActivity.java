@@ -1,6 +1,10 @@
 package com.example.project1.Game;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.EmbossMaskFilter;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -56,10 +60,16 @@ public class GameActivity extends Activity implements SensorEventListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         app = (MyApplication) getApplicationContext();
+
         try{
             mSocket = IO.socket(setURL);
         }catch(URISyntaxException e){}
-
+        String enemy = getIntent().getStringExtra("Enemy");
+        for(int i = 0; i < app.getAllPlayers().size();i++) {
+            if(app.getAllPlayers().get(i).getName().equals(enemy)) {
+                player2 = app.getAllPlayers().get(i);
+            }
+        }
         // 서버로부터의 소켓을 만들자!
         mSocket.connect();
 
@@ -70,16 +80,69 @@ public class GameActivity extends Activity implements SensorEventListener {
             }
         });
 
+        mSocket.on("youwin",new Emitter.Listener(){
+
+            @Override
+            public void call(Object... args) {
+                AlertDialog.Builder adb = new AlertDialog.Builder(GameActivity.this);
+                adb.setTitle("승리!");
+                adb.setMessage("축하합니다")
+                        .setCancelable(false)
+                        .setPositiveButton("그래",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(
+                                            DialogInterface dialog, int id) {
+                                        Intent intent = new Intent(getApplicationContext(), Tab3Activity.class);
+                                        startActivity(intent);
+                                    }
+
+                                });
+                if (!GameActivity.this.isFinishing()) {
+                    AlertDialog alert = adb.create();
+                    alert.show();
+                }
+            }
+        });
+
         mSocket.on("ouch", new Emitter.Listener() {
             @Override
-            public void call(Object... objects) {
-                JSONObject k = (JSONObject) objects[0];
-                    //int dmg = (Integer) k.get("Damage");
-                player1.hp = player1.hp - cnt;
-                Log.d("SOCKET","Battle Connected");
+            public void call(final Object... objects) {
+                mSocket.emit("surrender","");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        JSONObject k = (JSONObject) objects[0];
+                        //int dmg = (Integer) k.get("Damage");
+                        player1.hp = player1.hp - cnt;
+                        Log.d("HP",player1.hp + "");
+                        //여기에 if문
+                        if(player1.hp<0){
+
+                            AlertDialog.Builder adb = new AlertDialog.Builder(GameActivity.this);
+                            adb.setTitle("패배!");
+                            adb.setMessage("ㅠㅠㅜㅜㅜㅜ")
+                                    .setCancelable(false)
+                                    .setPositiveButton("그래",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(
+                                                        DialogInterface dialog, int id) {
+                                                    Intent intent = new Intent(getApplicationContext(), Tab3Activity.class);
+                                                    startActivity(intent);
+                                                }
+
+                                            });
+                            if (!GameActivity.this.isFinishing()) {
+
+                                AlertDialog alert = adb.create();
+                                alert.show();
+                            }
+                        }
+                    }
+                });
 
             }
         });
+
 
 
 
@@ -94,12 +157,7 @@ public class GameActivity extends Activity implements SensorEventListener {
         progressBar1 = (ProgressBar) findViewById((R.id.progressBar));
         progressBar2 = (ProgressBar) findViewById((R.id.progressBar2));
         player1 = app.getMyPlayer();
-        String enemy = getIntent().getStringExtra("Enemy");
-        for(int i = 0; i < app.getAllPlayers().size();i++) {
-            if(app.getAllPlayers().get(i).equals(enemy)) {
-                player2 = app.getAllPlayers().get(i);
-            }
-        }
+
     }
 
     @Override
