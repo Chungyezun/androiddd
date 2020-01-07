@@ -124,7 +124,7 @@ public class GameActivity extends Activity implements SensorEventListener {
                         //int dmg = (Integer) k.get("Damage");
                         player1.hp = player1.hp - cnt;
                         tView2.setText("" + (++cnt));
-                        progressBar1.incrementProgressBy(-cnt);
+                        progressBar1.incrementProgressBy(-1);
                         Log.d("HP",player1.hp + "");
                         //여기에 if문
                         if(player1.hp<0){
@@ -209,7 +209,7 @@ public class GameActivity extends Activity implements SensorEventListener {
                         }
                         mSocket.emit("damage",data);
                         tView.setText("" + (++cnt));
-                        progressBar2.incrementProgressBy(-cnt);
+                        progressBar2.incrementProgressBy(-1);
                         
                     }
                 }
