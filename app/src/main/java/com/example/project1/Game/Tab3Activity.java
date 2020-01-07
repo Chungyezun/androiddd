@@ -203,7 +203,6 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
 
                                         }
                                         mSocket.emit("AcceptBattleRequest",yes);
-                                        dialog.cancel()
                                         dialog.cancel();
                                     }
                                 });
