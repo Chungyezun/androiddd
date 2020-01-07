@@ -58,15 +58,13 @@ public class Player implements Comparable{
     public Pair<Double,Double> getLocation(){
         return new Pair(this.Latitude,this.Longitude);
     }
+    public boolean online = false;
 
 
 
     // getBattleRequest 둘다 True 면 전투 돌입!!!
 
-
     //.hasEnemy 가 true ==> 상대방이 내 Request 받아줌!
-    //
-
 
     public void setLocation(double Latitude,double Longitude){
         this.Latitude = Latitude;

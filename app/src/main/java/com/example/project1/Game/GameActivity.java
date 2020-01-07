@@ -59,6 +59,19 @@ public class GameActivity extends Activity implements SensorEventListener {
     String setURL = "http://22f3e836.ngrok.io";
     boolean result;
 
+    private void refresh(){
+        cnt = 0;
+        player1.hp = 100;
+        player2.hp = 100;
+        progressBar1.setProgress(player1.hp);
+        progressBar2.setProgress(player2.hp);
+    }
+
+
+
+    protected void onResume() {
+        super.onResume();
+    }
     protected void onCreate(Bundle savedInstanceState) {
         result = false;
         super.onCreate(savedInstanceState);
@@ -82,6 +95,7 @@ public class GameActivity extends Activity implements SensorEventListener {
         // 서버로부터의 소켓을 만들자!
         mSocket.connect();
         myPlayer.setText(app.getMyPlayer().getName());
+        app.getMyPlayer().online = true;
         enemy1.setText(player2.getName());
 
         mSocket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
@@ -95,24 +109,37 @@ public class GameActivity extends Activity implements SensorEventListener {
 
             @Override
             public void call(Object... args) {
-                result = false;
-                AlertDialog.Builder adb = new AlertDialog.Builder(GameActivity.this);
-                adb.setTitle("승리!");
-                adb.setMessage("축하합니다")
-                        .setCancelable(false)
-                        .setPositiveButton("그래",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(
-                                            DialogInterface dialog, int id) {
-                                        Intent intent = new Intent(getApplicationContext(), Tab3Activity.class);
-                                        startActivity(intent);
-                                    }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d("youwin","YOUWIN!!!!!!!!!!!!!!!!!!");
+                        result = false;
+                        AlertDialog.Builder adb = new AlertDialog.Builder(GameActivity.this);
+                        adb.setTitle("승리!");
+                        adb.setMessage("축하합니다")
+                                .setCancelable(false)
+                                .setPositiveButton("그래",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(
+                                                    DialogInterface dialog, int id) {
+                                                Intent intent = new Intent(getApplicationContext(), Tab3Activity.class);
+                                                startActivity(intent);
+                                                refresh();
+                                                finish();
+                                            }
 
-                                });
-                if (!GameActivity.this.isFinishing()) {
-                    AlertDialog alert = adb.create();
-                    alert.show();
-                }
+                                        });
+                        if (!GameActivity.this.isFinishing()) {
+                            if(!result){
+                                AlertDialog alert = adb.create();
+                                alert.show();
+                                result = true;
+                            }
+
+                        }
+                    }
+                });
+
             }
         });
 
@@ -131,7 +158,6 @@ public class GameActivity extends Activity implements SensorEventListener {
                         Log.d("HP",player1.hp + "");
                         //여기에 if문
                         if(player1.hp<0){
-                            result = false;
                             JSONObject send = new JSONObject();
                             try {
                                 send.accumulate("from", player1.getName());
@@ -151,13 +177,17 @@ public class GameActivity extends Activity implements SensorEventListener {
                                                         DialogInterface dialog, int id) {
                                                     Intent intent = new Intent(getApplicationContext(), Tab3Activity.class);
                                                     startActivity(intent);
+                                                    refresh();
+                                                    finish();
                                                 }
 
                                             });
                             if (!GameActivity.this.isFinishing()) {
-
-                                AlertDialog alert = adb.create();
-                               if(!result)alert.show();
+                               if(!result){
+                                   AlertDialog alert = adb.create();
+                                   alert.show();
+                                   result = true;
+                               }
                             }
                         }
                     }

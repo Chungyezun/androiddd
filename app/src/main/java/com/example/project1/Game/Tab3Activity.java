@@ -417,18 +417,35 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
         if(app.getAllPlayers() == null) {
             length = 0;
         }else{
-            length =app.getAllPlayers().size()-1;
+            length =enemyMarker.size();
         }
 
         List<Player> allPlayers = app.getAllPlayers();
         if(allPlayers == null){
         }else {
-            for (int i = 0; i < length; i++) {
+            for (int i = 0; i < enemyMarker.size(); i++) {
                 if(enemyMarker.get(i) != null){
                     enemyMarker.get(i).setPosition(new LatLng(app.getAllPlayers().get(i).getLocation().first, app.getAllPlayers().get(i).getLocation().second));
+                    if(app.getAllPlayers().get(i).online == false){
+                        enemyMarker.get(i).setVisible(false);
+                    }else{
+                        enemyMarker.get(i).setVisible(true);
+                    }
+                }
+            }
+            for (int i = 0; i < enemyCircle.size(); i++) {
+                if(enemyCircle.get(i) != null){
+                    enemyCircle.get(i).setCenter(new LatLng(app.getAllPlayers().get(i).getLocation().first, app.getAllPlayers().get(i).getLocation().second));
+                    if(app.getAllPlayers().get(i).online == false){
+                        enemyCircle.get(i).setVisible(false);
+                    }else{
+                        enemyCircle.get(i).setVisible(true);
+                    }
                 }
             }
         }
+        myCircle.setCenter(new LatLng(app.getMyPlayer().getLocation().first,app.getMyPlayer().getLocation().second));
+
         myMarker.setPosition(new LatLng(app.getMyPlayer().getLocation().first,app.getMyPlayer().getLocation().second));
 
     }
@@ -458,7 +475,7 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
      * @author
      */
     private void init() {
-
+        app.getMyPlayer().online = true;
         Pair<Double, Double> pos = app.getMyPlayer().getLocation();
         // 맵의 이동
         //mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 15));
@@ -482,6 +499,7 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
             optFirst.title("Current Position");// 제목 미리보기
             optFirst.snippet("Snippet");
             myMarker = mGoogleMap.addMarker(optFirst);
+
             t.start();
     }
         public static class WaitingDialog extends DialogFragment

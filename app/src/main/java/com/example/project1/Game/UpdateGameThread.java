@@ -36,7 +36,7 @@ public class UpdateGameThread extends Thread{
 
     UpdateGameThread(MyApplication app){
         this.app = app;
-    };
+    }
 
     String getURL = "http://22f3e836.ngrok.io/getPlayer";
     String setURL = "http://22f3e836.ngrok.io/postPlayer/";
@@ -86,6 +86,7 @@ public class UpdateGameThread extends Thread{
                 if (nplayers == null || array == null) {
                 } else {
                     Collections.addAll(nplayers, array);
+                    Log.e("GetPlayers","UPDATE!!!!!!!!!!!!!!!");
                     app.setAllPlayers(nplayers);                   //여기 local variable 도 덮어쓰기
                 }
 
@@ -214,7 +215,6 @@ public class UpdateGameThread extends Thread{
             }catch(InterruptedException e){
 
             }
-            Log.e("FIN","finished Get Request");
             //3. Update My Player Information
             updateUS();
             try{
@@ -222,6 +222,12 @@ public class UpdateGameThread extends Thread{
             }catch(InterruptedException e){
 
             }
+            int cnt = 0;
+            for(Player p : app.getAllPlayers()){
+                if(p.online)cnt++;
+            }
+            Log.e("FIN","finished Get Request :: " +cnt);
+
         }
     }
 }

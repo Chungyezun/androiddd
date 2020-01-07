@@ -140,6 +140,7 @@ public class MyApplication extends Application {
         return this.imgNames;
     }
     public List<Player> getAllPlayers(){
+
         return this.allPlayers;
     }
     public void setPlayer(Player player){
