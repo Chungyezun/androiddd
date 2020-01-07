@@ -222,8 +222,9 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
                                                 dialog.cancel();
                                             }
                                         });
-                        AlertDialog alert = adb.create();
-                        alert.show();
+                        if(!Tab3Activity.this.isFinishing()){
+                            AlertDialog alert = adb.create();
+                            alert.show();}
                     }
                 });
 
