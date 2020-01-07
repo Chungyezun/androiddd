@@ -122,7 +122,7 @@ public class GameActivity extends Activity implements SensorEventListener {
                     public void run() {
                         JSONObject k = (JSONObject) objects[0];
                         //int dmg = (Integer) k.get("Damage");
-                        player1.hp = player1.hp - cnt;
+                        player1.hp = player1.hp - 1;
                         tView2.setText("" + (++cnt));
                         progressBar1.incrementProgressBy(-1);
                         Log.d("HP",player1.hp + "");
@@ -168,6 +168,8 @@ public class GameActivity extends Activity implements SensorEventListener {
         progressBar1 = (ProgressBar) findViewById((R.id.progressBar));
         progressBar2 = (ProgressBar) findViewById((R.id.progressBar2));
         player1 = app.getMyPlayer();
+        progressBar1.setProgress(player1.hp);
+        progressBar2.setProgress(player2.hp);
 
     }
 
@@ -210,6 +212,7 @@ public class GameActivity extends Activity implements SensorEventListener {
                         mSocket.emit("damage",data);
                         tView.setText("" + (++cnt));
                         progressBar2.incrementProgressBy(-1);
+                        player2.hp--;
                         
                     }
                 }

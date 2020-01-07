@@ -272,7 +272,7 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
         mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         battleRadius = new CircleOptions()
             .center( new LatLng(app.getMyPlayer().getLocation().first,app.getMyPlayer().getLocation().second))
-                .radius(300)
+                .radius(50)
                 .fillColor(Color.parseColor("#4D0000ff"))
 
                 .strokeWidth(0f)
