@@ -177,7 +177,7 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        AlertDialog.Builder adb = new AlertDialog.Builder(getApplicationContext());
+                        AlertDialog.Builder adb = new AlertDialog.Builder(Tab3Activity.this);
                         adb.setTitle("대결신청");
                         adb.setMessage("싸우시겠습니까?");
                         adb.setMessage("프로그램을 종료할 것입니까?")
@@ -210,8 +210,9 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
                                                 dialog.cancel();
                                             }
                                         });
-                        AlertDialog alert = adb.create();
-                        alert.show();
+                        if(!Tab3Activity.this.isFinishing()){
+                            AlertDialog alert = adb.create();
+                            alert.show();}
                     }
                 });
 
