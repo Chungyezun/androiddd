@@ -18,10 +18,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -30,8 +26,6 @@ import com.example.project1.R;
 
 import java.util.ArrayList;
 import java.util.Collections;
-
-import java.util.Comparator;
 import java.util.List;
 
 import static com.example.project1.MyApplication.getAppContext;
@@ -100,7 +94,7 @@ public class Game_Fragment extends Fragment {
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), GameActivity.class);
+                Intent intent = new Intent(getContext(), Tab3Activity.class);
                 startActivity(intent);
             }
         });

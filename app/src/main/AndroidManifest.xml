@@ -24,7 +24,6 @@
         android:theme="@style/AppTheme">
         <activity android:name=".Game.GameActivity"></activity>
         <activity android:name=".Game.Tab3Activity" />
-
         <activity
             android:name=".Contacts.Contact_Details"
             android:label="@string/title_activity_contact__details"

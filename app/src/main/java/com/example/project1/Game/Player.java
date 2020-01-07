@@ -31,7 +31,6 @@ public class Player implements Comparable{
     public void setEnemy(String enemyName){
         this.enemy = enemyName;
     }
-
     /* 플레이어의 직업을 설정하자!!!
 
 
