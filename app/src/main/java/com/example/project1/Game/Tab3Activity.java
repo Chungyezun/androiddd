@@ -173,42 +173,49 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
                 Log.d("SOCKET","You have got a battle Request");
                 String from = (String) objects[0];
                 //Accept or not.. This is the question...
-                AlertDialog.Builder adb = new AlertDialog.Builder(getApplicationContext());
-                adb.setTitle("대결신청");
-                adb.setMessage("싸우시겠습니까?");
-                adb.setMessage("프로그램을 종료할 것입니까?")
-                .setCancelable(false)
-                .setPositiveButton("싸운다",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(
-                                            DialogInterface dialog, int id) {
-                                        JSONObject yes = new JSONObject();
-                                        try {
-                                            yes.accumulate("answer", true);
-                                        }catch(JSONException e){
 
-                                        }
-                                        mSocket.emit("AcceptBattleRequest",yes);
-                                        dialog.cancel();
-                                    }
-                                })
-                        .setNegativeButton("도망간다",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(
-                                            DialogInterface dialog, int id) {
-                                        JSONObject yes = new JSONObject();
-                                        try {
-                                            yes.accumulate("answer", false);
-                                        }catch(JSONException e){
-
-                                        }
-                                        mSocket.emit("AcceptBattleRequest",yes);
-                                        dialog.cancel();
-                                    }
-                                });
                 //mSocket.emit("AcceptBattleRequest",0); //YES 라고 가정할 때...
-                AlertDialog alert = adb.create();
-                alert.show();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        AlertDialog.Builder adb = new AlertDialog.Builder(getApplicationContext());
+                        adb.setTitle("대결신청");
+                        adb.setMessage("싸우시겠습니까?");
+                        adb.setMessage("프로그램을 종료할 것입니까?")
+                                .setCancelable(false)
+                                .setPositiveButton("싸운다",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(
+                                                    DialogInterface dialog, int id) {
+                                                JSONObject yes = new JSONObject();
+                                                try {
+                                                    yes.accumulate("answer", true);
+                                                }catch(JSONException e){
+
+                                                }
+                                                mSocket.emit("AcceptBattleRequest",yes);
+                                                dialog.cancel();
+                                            }
+                                        })
+                                .setNegativeButton("도망간다",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(
+                                                    DialogInterface dialog, int id) {
+                                                JSONObject yes = new JSONObject();
+                                                try {
+                                                    yes.accumulate("answer", false);
+                                                }catch(JSONException e){
+
+                                                }
+                                                mSocket.emit("AcceptBattleRequest",yes);
+                                                dialog.cancel();
+                                            }
+                                        });
+                        AlertDialog alert = adb.create();
+                        alert.show();
+                    }
+                });
+
             }
         });
 
