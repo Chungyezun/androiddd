@@ -190,10 +190,12 @@ public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapCl
                                                 try {
                                                     yes.accumulate("answer", true);
                                                 }catch(JSONException e){
-
+                                                    Log.e("why","why");
                                                 }
+                                                Log.e("hey","1");
                                                 mSocket.emit("AcceptBattleRequest",yes);
                                                 dialog.cancel();
+                                                Log.e("gg","gg");
                                             }
                                         })
                                 .setNegativeButton("도망간다",

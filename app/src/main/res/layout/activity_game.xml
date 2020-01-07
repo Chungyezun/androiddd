@@ -25,7 +25,7 @@
         android:id="@+id/resetBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="52dp"
+        android:layout_marginStart="160dp"
         android:layout_marginBottom="50dp"
         android:text="스따트"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -42,4 +42,5 @@
         app:layout_constraintBaseline_toBaselineOf="@+id/cntView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/cntView" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
