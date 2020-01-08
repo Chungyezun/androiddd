@@ -56,7 +56,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 
     private SensorManager sensorManager;
     private Sensor accelerormeterSensor;
-    String setURL = "http://22f3e836.ngrok.io";
+    String setURL = "http://431476f2.ngrok.io";
     boolean result;
 
     private void refresh(){
