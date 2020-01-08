@@ -19,6 +19,7 @@ import com.example.project1.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class AddContact extends AppCompatActivity {
 
@@ -62,19 +63,13 @@ public class AddContact extends AppCompatActivity {
     public void press_save(View view){
 
         Intent intent = new Intent(this, MainActivity.class);
-
         EditText name = (EditText) findViewById(R.id.typename);
         String n_name = name.getText().toString();
-
         EditText addr = (EditText) findViewById(R.id.typeaddr);
         String n_addr = addr.getText().toString();
-
         Contact ncont = new Contact(n_name,n_addr);
 
-        List<Contact> contacts = new ArrayList<>();
-        contacts = app.getContacts();
-        contacts.add(ncont);
-        app.setContacts(contacts);
+        app.setContacts(ncont);
 
         //LOAD JSON FILE
         startActivity(intent); //main 으로 복귀

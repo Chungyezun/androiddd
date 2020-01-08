@@ -12,12 +12,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.project1.R;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHolder> {
     public static final String EXTRA_MESSAGE = "CONTACT_DATA";
-    private List<Contact> mcontacts;
-    public List<Contact> getContactList(){
+    private Set<Contact> mcontacts;
+    public Set<Contact> getContactList(){
         return mcontacts;
     }
 
@@ -70,7 +73,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
 
 
     }
-    public ContactAdapter(List<Contact> contacts) {
+    public ContactAdapter(Set<Contact> contacts) {
         mcontacts = contacts;
     }
 
@@ -94,7 +97,8 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     // viewHolder 에 적절한 데이터를 넣어 변환시킨다.
     @Override
     public void onBindViewHolder(ContactAdapter.ViewHolder viewHolder, int position){
-        Contact contact = mcontacts.get(position); // List 에서 가져오기
+        List<Contact> imsi = new ArrayList<>(mcontacts);
+        Contact contact = imsi.get(position); // List 에서 가져오기
         TextView personName = viewHolder.personName;
         personName.setText(contact.getName());
         TextView personNumber = viewHolder.phoneNumber;
@@ -107,7 +111,12 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
 
     @Override
     public int getItemCount(){
-        return mcontacts.size();
+        if(mcontacts == null){
+            return 0;
+        }else{
+            return mcontacts.size();
+
+        }
     }
 
 }

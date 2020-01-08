@@ -16,7 +16,9 @@ import android.widget.AbsListView;
 import android.widget.GridView;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.example.project1.IOcustom;
 import com.example.project1.MyApplication;
@@ -32,9 +34,9 @@ public class Contact_Fragment extends Fragment {
     private RecyclerView mRecyclerView;
     private ContactAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private List<Contact> contacts = new ArrayList<>();
+    private Set<Contact> contacts = new HashSet<>();
 
-    public List<Contact> getContacts(){
+    public Set<Contact> getContacts(){
         return contacts;
     }
     SwipeRefreshLayout swl;
@@ -73,7 +75,7 @@ public class Contact_Fragment extends Fragment {
             @Override
             public void onRefresh() {
                     Log.d("CONTACTS","CONTACT HAS BEEN REFRESHED");
-                    app.getContacts();
+                    app.loadContacts();
                     //MyAdapter nAdapter = new MyAdapter(R.layout.row,app);
                     mAdapter.notifyDataSetChanged();
                     mRecyclerView.refreshDrawableState();

@@ -16,6 +16,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpResponse;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -23,6 +24,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -32,8 +34,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -51,13 +55,14 @@ import static com.example.project1.MyApplication.getAppContext;
 import static java.sql.DriverManager.println;
 
 public class IOcustom {
-    String forwardURL = "http://22f3e836.ngrok.io";
+    String forwardURL = "http://431476f2.ngrok.io";
     String input_data;
     String write_data;
     Bitmap input_bitmap;
 
     public void writeToFile(String data, Context context) {
         // Exception 이 안 뜨면, Contacts.json 에 data string 저장. contexts 는 이 앱으로 준다.
+        Log.e("WRITE TO FILE:::",data);
         input_data = data;
         new JSONTaskWrite().execute(forwardURL+"/post");
     }
@@ -65,7 +70,7 @@ public class IOcustom {
     public void deleteFile(String data, Context context) {
         // Exception 이 안 뜨면, Contacts.json 에 data string 저장. contexts 는 이 앱으로 준다.
         input_data = data;
-        new JSONTaskWrite().execute(forwardURL+"/editcontacts");
+        new JSONTaskDelete().execute(forwardURL+"/deleteContact");
     }
 
     public void readFromFile(Context context) {
@@ -274,10 +279,93 @@ public class IOcustom {
     public class JSONTaskWrite extends AsyncTask<String, String, String> {
 
         protected String doInBackground(String[] urls) {
+            /*
+            URL url = null;
+            try {
+                url = new URL(urls[0]);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+            HttpURLConnection con = null;
+            try {
+                con = (HttpURLConnection)url.openConnection();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                con.setRequestMethod("POST");
+            } catch (ProtocolException e) {
+                e.printStackTrace();
+            }
+            con.setRequestProperty("Content-Type", "application/json; utf-8");
+            con.setRequestProperty("Accept", "application/json");
+            con.setDoOutput(true);
+            try(OutputStream os = con.getOutputStream()) {
+                Log.d("CONTACT:WTS",input_data);
+                byte[] input = input_data.getBytes("utf-8");
+                os.write(input, 0, input.length);
+                Log.d("CONTACT","POSTED REQ?");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try(BufferedReader br = new BufferedReader(
+                    new InputStreamReader(con.getInputStream(), "utf-8"))) {
+                StringBuilder response = new StringBuilder();
+                String responseLine = null;
+                while ((responseLine = br.readLine()) != null) {
+                    response.append(responseLine.trim());
+                }
+                System.out.println(response.toString());
+                con.disconnect();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            */
+            try {
+                URL url = new URL(urls[0]);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Type", "application/json");//;charset=UTF-8
+                conn.setRequestProperty("Accept","application/json");
+                conn.setDoOutput(true);
+                conn.setDoInput(true);
+
+                JSONObject jsonParam = new JSONObject(input_data);
+
+
+                Log.i("JSON", jsonParam.toString());
+                DataOutputStream os = new DataOutputStream(conn.getOutputStream());
+                //os.writeBytes(URLEncoder.encode(jsonParam.toString(), "UTF-8"));
+                os.writeBytes(jsonParam.toString());
+
+                os.flush();
+                os.close();
+
+                Log.i("STATUS", String.valueOf(conn.getResponseCode()));
+                Log.i("MSG" , conn.getResponseMessage());
+
+                conn.disconnect();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return null;
+
+        }
+
+
+    }
+
+    public class JSONTaskDelete extends AsyncTask<String, String, String> {
+
+        protected String doInBackground(String[] urls) {
             try {
                 //JSONObject를 만들고 key value 형식으로 값을 저장해준다.
-                JSONArray jarray = new JSONArray(input_data);
-                JSONObject jsonObject = jarray.getJSONObject(0);
+                //JSONArray jarray = new JSONArray(input_data);
+                Gson gson = new Gson();
+                JSONObject jsonObject = gson.fromJson(input_data,JSONObject.class);
 
                 HttpURLConnection con = null;
                 BufferedReader reader = null;
@@ -481,6 +569,7 @@ public class IOcustom {
 
         @Override
         protected void onPostExecute(String result) {
+            Log.e("CONTACTS","updated contacts");
             super.onPostExecute(result);
             MyApplication app = (MyApplication) getAppContext();
             app.updateContacts(result);

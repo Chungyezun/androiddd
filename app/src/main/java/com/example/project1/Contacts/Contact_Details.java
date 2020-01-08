@@ -23,7 +23,9 @@ import com.example.project1.MyApplication;
 import com.example.project1.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 public class Contact_Details extends AppCompatActivity {
     boolean inEdit;
@@ -62,10 +64,8 @@ public class Contact_Details extends AppCompatActivity {
                     String newName = n_name.getText().toString();
                     String newNumber = n_number.getText().toString();
                     Contact newcont = new Contact(newName,newNumber);
-                    List<Contact> getlist = app.getContacts();
-                    getlist.set(pos,newcont);
 
-                    app.setContacts(getlist);//apply the edited stuff.
+                    app.setContacts(newcont);//apply the edited stuff.
                     //apply edit to new interface aswell.
                     name.setText(newName);
                     number.setText(newNumber);
@@ -123,9 +123,9 @@ public class Contact_Details extends AppCompatActivity {
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     //지우고 밖으로 가자.
-                                    List<Contact> getlist = app.getContacts();
-                                    getlist.remove(pos);
-                                    app.setContacts(getlist);//apply the edited stuff.
+                                    List<Contact> getlist = new ArrayList<>(app.getContacts());
+                                    Contact target = getlist.get(pos);
+                                    app.deleteContact(target);//apply the edited stuff.
                                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                     startActivity(intent);
                                 }
@@ -168,8 +168,8 @@ public class Contact_Details extends AppCompatActivity {
         Intent intent = getIntent();
         // intent 를 가져옴
         pos = intent.getIntExtra(EXTRA_MESSAGE,0);
-        List<Contact> mcontacts = new ArrayList<>();
-        mcontacts = app.getContacts();
+        List<Contact> mcontacts = new ArrayList<>(app.getContacts());
+
         Contact target = mcontacts.get(pos);
         String load_name = target.getName();
         String load_number = target.getNumber();

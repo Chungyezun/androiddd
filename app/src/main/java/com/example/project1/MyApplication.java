@@ -29,9 +29,11 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Executor;
 
 public class MyApplication extends Application {
@@ -42,7 +44,7 @@ public class MyApplication extends Application {
 
     //Three consistant data for application.
     //They are stored in disk by every edit sequence, and loaded onCreate();
-    private List<Contact> contacts = new ArrayList<>();
+    private Set<Contact> contacts = new HashSet<>();
     private Map<String, String> cache = new HashMap<>();
     private List<String> imgNames;
     private static Player myPlayer;
@@ -50,7 +52,7 @@ public class MyApplication extends Application {
     private static LocationRequest locationRequest;
     private static LocationCallback locationCallback;
     private static FusedLocationProviderClient mFusedLocationClient;
-    private static String URL = "http://22f3e836.ngrok.io/";
+    private static String URL = "http://431476f2.ngrok.io/";
     public String getURL(){
         return this.URL;
     }
@@ -100,28 +102,42 @@ public class MyApplication extends Application {
 
     }
 
-    public List<Contact> getContacts(){
-        iocustom.getImName(context);
+    public Set<Contact> getContacts(){
+        iocustom.readFromFile(context);
         return contacts;
     }
 
 
-    public void setContacts(List<Contact> contacts){
+    public void setContacts(Contact nContact){//전체삭제보다 하나하나씩
         // List Manipulation 은 그냥 activity/fragment 에서 하자.
         // 여기는 I/O 및 덮어쓰기만 하자
-        this.contacts = contacts;                       //여기 local variable 도 덮어쓰기
+        this.contacts.add(nContact);                       //여기 local variable 도 덮어쓰기
         String json;
-        json = gson.toJson(contacts);                   //리스트를 json 으로 만들기
+        json = gson.toJson(nContact);                   //리스트를 json 으로 만들기
+        Log.d("CONTACT",json);
         iocustom.writeToFile(json,getAppContext());     // 그거를 그대로 덮어쓰기
     }
+
     public void updateContacts(String jsonString){
         Contact[] array = gson.fromJson(jsonString, Contact[].class); //json 에서 얻어가기
-        List<Contact> ncontacts = new ArrayList<>();
-        if(ncontacts == null || array == null){
+        List<Contact> abc = new ArrayList<>();
+        if(array == null){
+            this.contacts = null;
         }else{
-            Collections.addAll(ncontacts,array);
-            this.contacts = ncontacts;                       //여기 local variable 도 덮어쓰기
+            Collections.addAll(abc,array);
+            Log.e("gotArray",abc.toString());
+            this.contacts = new HashSet<>(abc);                       //여기 local variable 도 덮어쓰기
         }
+    }
+    public void loadContacts(){
+        iocustom.readFromFile(this);
+    }
+
+    public void deleteContact(Contact nContact){
+        contacts.remove(nContact);
+        String json;
+        json = gson.toJson(nContact);
+        iocustom.deleteFile(json,getAppContext());
     }
 
     public void updateNames(String jsonString){
@@ -131,13 +147,15 @@ public class MyApplication extends Application {
             this.imgNames = null;
         }else{
             Collections.addAll(abc,array);
-            Log.e("gotArray",abc.toString());
+            //Log.e("gotArray",abc.toString());
             this.imgNames = abc;                       //여기 local variable 도 덮어쓰기
         }
     }
     public List<String> getNames(){
-        iocustom.getImName(context); // Name 리스트 업데이트도 겸함..
         return this.imgNames;
+    }
+    public void updateNames(){
+        iocustom.getImName(context); // Name 리스트 업데이트도 겸함..
     }
     public List<Player> getAllPlayers(){
 

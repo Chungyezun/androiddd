@@ -150,6 +150,7 @@ public class Game_Fragment extends Fragment {
                         }
                     }
                 }
+                login_button.setVisibility(View.INVISIBLE);
             }
         });
         swl = (SwipeRefreshLayout) view.findViewById(R.id.swiperefreshGL);
@@ -157,6 +158,7 @@ public class Game_Fragment extends Fragment {
             @Override
             public void onRefresh() {
                 app = (MyApplication) getAppContext();
+                app.updateNames();
                 if(app.getAllPlayers() != null) {
                     players = app.getAllPlayers();
                     Collections.sort(players,Collections.<Player>reverseOrder());

@@ -93,7 +93,7 @@ import static com.example.project1.Game.GameActivity.cnt;
 
 public class Tab3Activity extends AppCompatActivity implements GoogleMap.OnMapClickListener, OnMapReadyCallback {
     public static WaitingDialog wd;
-    String setURL = "http://22f3e836.ngrok.io";
+    String setURL = "http://431476f2.ngrok.io";
     // SOCKET FUNCTIONS HERE!
     boolean response;
     MyActivity request;

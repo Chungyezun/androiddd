@@ -71,6 +71,7 @@ public class Gallery_Fragment extends Fragment {
             @Override
             public void onRefresh() {
                 app.getNames();
+                app.updateNames();
 
                 //MyAdapter nAdapter = new MyAdapter(R.layout.row,app);
                 mAdapter.notifyDataSetChanged();
@@ -106,7 +107,7 @@ public class Gallery_Fragment extends Fragment {
     private void ShowDialogBox(final int i)
     {
         final Dialog dialog = new Dialog(getActivity());
-
+        List<String> names = app.getNames();
         dialog.setContentView(R.layout.custom_dialog);
 
         //Getting custom dialog views
@@ -115,16 +116,16 @@ public class Gallery_Fragment extends Fragment {
         Button btn_Full = dialog.findViewById(R.id.btn_full);
         Button btn_Close = dialog.findViewById(R.id.btn_close);
 
-        Log.d("ImDialog",app.getURL() +"image/"+ app.getNames().get(i));
+        Log.d("ImDialog",app.getURL() +"image/"+ names.get(i));
         Glide.with(getAppContext())
-                .load(app.getURL() +"image/"+ app.getNames().get(i))
+                .load(app.getURL() +"image/"+ names.get(i))
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(Image);
 
 
         //String path = img.getPath();
 
-        final String name = app.getNames().get(i);
+        final String name = names.get(i);
         Image_name.setText(name);
         //File f1 = new File(img.getPath());
         //Glide

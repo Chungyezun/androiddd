@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public List<Contact> getContacts(){
+        iocustom.readFromFile(this);
         return contacts;
     }
 
@@ -313,20 +314,20 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onActivityResult ( int requestCode, int resultCode, Intent data){
+            super.onActivityResult(requestCode, resultCode, data);
 
             if(!Logged_in){
                 callbackManager.onActivityResult(requestCode, resultCode, data);
 
             }else{
                 Log.e("TAB","Camera return");
-                if (resultCode == RESULT_OK) {
+                //if (resultCode == RESULT_OK) {
                     Bundle extras = data.getExtras();
                     Bitmap imageBitmap = (Bitmap) extras.get("data");
                     iocustom.sendImage(imageBitmap,getAppContext());
                     Log.d("IMAGE","SENT IMAGE");
-                }
+                //}
             }
-            super.onActivityResult(requestCode, resultCode, data);
 
         }
 
