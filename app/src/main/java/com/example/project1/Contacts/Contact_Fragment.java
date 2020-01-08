@@ -74,7 +74,7 @@ public class Contact_Fragment extends Fragment {
         swl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                    Log.d("CONTACTS","CONTACT HAS BEEN REFRESHED");
+                    //Log.d("CONTACTS","CONTACT HAS BEEN REFRESHED");
                     app.loadContacts();
                     //MyAdapter nAdapter = new MyAdapter(R.layout.row,app);
                     mAdapter.notifyDataSetChanged();

@@ -518,7 +518,7 @@ public class IOcustom {
 
         @Override
         protected void onPostExecute(String result) {
-            Log.e("CONTACTS","updated contacts");
+            Log.e("CONTACTS","updated contacts::" + result);
             super.onPostExecute(result);
             MyApplication app = (MyApplication) getAppContext();
             app.updateContacts(result);

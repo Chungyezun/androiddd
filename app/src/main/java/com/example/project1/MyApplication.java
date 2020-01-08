@@ -119,6 +119,7 @@ public class MyApplication extends Application {
     }
 
     public void updateContacts(String jsonString){
+        Log.d("CONTACT",jsonString);
         Contact[] array = gson.fromJson(jsonString, Contact[].class); //json 에서 얻어가기
         List<Contact> abc = new ArrayList<>();
         if(array == null){
@@ -130,6 +131,7 @@ public class MyApplication extends Application {
         }
     }
     public void loadContacts(){
+        Log.e("RFF","START");
         iocustom.readFromFile(this);
     }
 
